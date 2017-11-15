@@ -1,6 +1,6 @@
 # MiniQuad
 
-A MiniQuad powered by an ESP8266 running an ESPAsyncWebServer delivering a Framework7 application.
+A MiniQuad powered by a [NodeMCU](https://github.com/nodemcu/nodemcu-devkit-v1.0) running an [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer) delivering a [Framework7](http://framework7.io/) application.
 
 ## Contents
 
@@ -12,7 +12,7 @@ A MiniQuad powered by an ESP8266 running an ESPAsyncWebServer delivering a Frame
  
 ### arduino
 - All the files required to program the ESP8266 through the Arduino application.
-- Data folder containing the framework 7 application.
+- Data folder containing the Framework7 application.
 
 ### html
 - The files of the Framework7 v2 application (found in arduino/MiniQuad/data, with bigger files gzipped)
