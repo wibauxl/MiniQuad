@@ -1,0 +1,55 @@
+<template>
+<div class="page">
+	<div class="navbar">
+		<div class="navbar-inner sliding">
+			<div class="title">MiniQuad - Edit Move</div>
+			<div class="right">
+				<a href="/moves/" class="link">Done</a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="list">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">Name</div>
+							<div class="item-input">
+								<input type="text" placeholder="Move name" id="move-name" value="">
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="toolbar tabbar toolbar-bottom-md">
+		<div class="toolbar-inner sliding">
+			<a href="/home/" class="tab-link">
+				<i class="icon f7-icons">paper_plane</i>
+			</a>
+			<a href="#moves" class="tab-link tab-link-active">
+				<i class="icon f7-icons">data</i>
+			</a>
+			<a href="/settings/" class="tab-link">
+				<i class="icon f7-icons">filter</i>
+			</a>
+		</div>
+	</div>
+</div>
+</template>
+<script>
+return {
+	on: {
+		pageInit: function(e, page) {
+			var query = page.route.query;
+			var $ = this.$;
+			var app = this.$app;
+			if (query.m === 'New') {
+				// do nothing
+			} else $("#move-name").val(query.m);
+		},
+	}
+}
+</script>

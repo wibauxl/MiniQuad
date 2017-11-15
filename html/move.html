@@ -1,0 +1,70 @@
+<template>
+<div class="page">
+	<div class="navbar">
+		<div class="navbar-inner sliding">
+			<div class="title">MiniQuad - Edit Move</div>
+			<div class="right">
+				<a href="/edit-moves/" class="link">Done</a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="block-title" id="move-id"></div>
+		<div class="list">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">Name</div>
+							<div class="item-input">
+								<input type="text" placeholder="Move name" id="move-name" value="">
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="block-title">Steps</div>
+		<div class="list links-list">
+			<ul>
+				{{#each step}}
+				<li><a href="/step/?s={{@index}}">{{this}}</a></li>
+				{{/each}}
+			</ul>
+		</div>
+	</div>
+	<div class="toolbar tabbar toolbar-bottom-md">
+		<div class="toolbar-inner sliding">
+			<a href="/home/" class="tab-link">
+				<i class="icon f7-icons">paper_plane</i>
+			</a>
+			<a href="#moves" class="tab-link tab-link-active">
+				<i class="icon f7-icons">data</i>
+			</a>
+			<a href="/settings/" class="tab-link">
+				<i class="icon f7-icons">filter</i>
+			</a>
+		</div>
+	</div>
+</div>
+</template>
+<script>
+return {
+	data: function () {
+		return {
+			"step":['-100 100 100 -100 100 -100 100 100 200', '-100 -100 -100 -100 -100 -100 -100 -100 200']
+		}
+	},
+
+	on: {
+		pageInit: function(e, page) {
+			var query = page.route.query;
+			var $ = this.$;
+			var app = this.$app;
+			var userMoveId = (parseInt(query.m) + 1);
+			$("#move-id").html("User move " + userMoveId);
+			$("#move-name").val("Unused " + userMoveId);
+		},
+	}
+}
+</script>

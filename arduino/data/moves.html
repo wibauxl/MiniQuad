@@ -1,0 +1,90 @@
+<template>
+<div class="page">
+	<div class="navbar">
+		<div class="navbar-inner sliding">
+			<div class="left mq-left">
+				<svg width="80" height="30" viewbox="-2 -4 120 40">
+					<rect height="30" width="104" y="0" x="0" stroke-width="2" stroke="#000" fill="#fff"/>
+					<rect height="14" width="8" y="8" x="104" stroke-width="0" stroke="#000" fill="#000000"/>
+					<rect class="mq-battery-fill" height="26" width="50" y="2" x="2" stroke-width="0" stroke="#000" fill="#00bf5f"/>
+					<text class="mq-battery-text" font-weight="500" font-size="20" y="22" x="34" stroke-width="0" stroke="#000" fill="#000000"> 50%</text>
+				</svg>
+			</div>
+			<div class="title">MiniQuad - Moves</div>
+			<div class="right">
+				<a href="/edit-moves/" class="link">Edit</a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="block-title">Moves</div>
+		<div class="list simple-list">
+			<ul>
+				{{#each move}}
+				<li><a href="#" class="list-button item-link mq-list-button">{{this}}</a></li>
+				{{/each}}
+			</ul>
+		</div>
+		<!-- speed bar -->
+		<div class="block-title">Move speed</div>
+		<div class="list simple-list">
+			<ul>
+				<li>
+					<div class="item-cell width-auto flex-shrink-0">
+						<i class="icon f7-icons ios-only">delete_round</i>
+						<i class="icon material-icons md-only">remove</i>
+					</div>
+					<div class="item-cell flex-shrink-3">
+						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeMoveSpeed" id="mq-moves-speed"
+							data-min="0" data-max="100" data-step="1" data-value="50"></div>
+					</div>
+					<div class="item-cell width-auto flex-shrink-0">
+						<i class="icon f7-icons ios-only">add_round</i>
+						<i class="icon material-icons md-only">add</i>
+					</div>
+				</li>
+			</ul>
+		</div>
+		
+	</div>
+	<div class="toolbar tabbar toolbar-bottom-md">
+		<div class="toolbar-inner sliding">
+			<a href="/home/" class="tab-link">
+				<i class="icon f7-icons">paper_plane</i>
+			</a>
+			<a href="#moves" class="tab-link tab-link-active">
+				<i class="icon f7-icons">data</i>
+			</a>
+			<a href="/settings/" class="tab-link">
+				<i class="icon f7-icons">filter</i>
+			</a>
+		</div>
+	</div>
+</div>
+</template>
+<script>
+return {
+	data: function () {
+		return {
+			"move":['Dance', 'Bow', 'Lie', 'Jump']
+		}
+	},
+	
+	on: {
+		pageInit: function () {
+			var command = "action:moveSpeed:get";
+			console.log("/ws/ < " + command);
+			ws.send(command);
+		},
+	},
+	
+	methods: {
+		onChangeMoveSpeed: function (e, range) {
+			var $ = this.$;
+			var app = this.$app;
+			var moveSpeed = app.range.getValue('#mq-moves-speed');
+			sendWSCommand("action:moveSpeed:set:" + moveSpeed);
+		},
+	}
+}
+</script>

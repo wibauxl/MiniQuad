@@ -1,0 +1,141 @@
+<template>
+<div class="page">
+	<div class="navbar">
+		<div class="navbar-inner sliding">
+			<div class="title">MiniQuad - Configuration</div>
+		</div>
+	</div>
+	<div id="settings" class="page-content">
+		<div class="block-title">Servo actions</div>
+		<div class="list simple-list">
+			<ul>
+				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('center')">Center all</a></li>
+				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('hips-range')">Test hips range</a></li>
+				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('legs-range')">Test legs range</a></li>
+			</ul>
+		</div>
+		<div class="block-title">Servo centers</div>
+		<div class="list simple-list">
+			<ul>
+				{{#each servo}}
+				<li class="item-row">
+					<div class="item-cell flex-shrink-0 mq-servo-label">{{this}}</div>
+					<div class="item-cell width-auto flex-shrink-0">
+						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-center', -1)">
+							<i class="icon f7-icons ios-only mq-servo-icon">delete_round</i>
+							<i class="icon material-icons md-only mq-servo-icon">remove</i>
+						</a>
+					</div>
+					<div class="item-cell flex-shrink-3">
+						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeServo" id="{{this}}-center"
+							data-min="70" data-max="110" data-step="1" data-value="90"></div>
+					</div>
+					<div class="item-cell width-auto flex-shrink-0">
+						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-center', 1)">
+							<i class="icon f7-icons ios-only mq-servo-icon">add_round</i>
+							<i class="icon material-icons md-only mq-servo-icon">add</i>
+						</a>
+					</div>
+				</li>
+				{{/each}}
+			</ul>
+			<div class="list-block-label">Adjust each servo center position</div>
+		</div>
+		<div class="block-title">Servo ranges</div>
+		<div class="list simple-list">
+			<ul>
+				{{#each servo}}
+				<li class="item-row">
+					<div class="item-cell flex-shrink-0 mq-servo-label">{{this}}</div>
+					<div class="item-cell width-auto flex-shrink-0">
+						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-range', -1)">
+							<i class="icon f7-icons ios-only mq-servo-icon">delete_round</i>
+							<i class="icon material-icons md-only mq-servo-icon">remove</i>
+						</a>
+					</div>
+					<div class="item-cell flex-shrink-3">
+						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeServo" id="{{this}}-range"
+							data-min="0" data-max="60" data-step="1" data-value="40"></div>
+					</div>
+					<div class="item-cell width-auto flex-shrink-0">
+						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-range', 1)">
+							<i class="icon f7-icons ios-only mq-servo-icon">add_round</i>
+							<i class="icon material-icons md-only mq-servo-icon">add</i>
+						</a>
+					</div>
+				</li>
+				{{/each}}
+			</ul>
+			<div class="list-block-label">Adjust each servo range</div>
+		</div>
+		<div class="block" style="text-align: center">
+			<img src="MiniQuad.svg" style="width:80%"/>
+		</div>
+	
+	</div>
+	<div class="toolbar tabbar toolbar-bottom-md">
+		<div class="toolbar-inner sliding">
+			<a href="/home/" class="tab-link">
+				<i class="icon f7-icons">paper_plane</i>
+			</a>
+			<a href="/moves/" class="tab-link">
+				<i class="icon f7-icons">data</i>
+			</a>
+			<a href="#settings" class="tab-link  tab-link-active">
+				<i class="icon f7-icons">filter</i>
+			</a>
+		</div>
+	</div>
+</div>
+</template>
+<script>
+return {
+	data: function () {
+		return {
+			"servo":['FLH', 'FRH', 'BRH', 'BLH', 'FLL', 'FRL', 'BRL', 'BLL']
+		}
+	},
+
+	on: {
+		pageInit: function () {
+			var self = this;
+			var app = self.$app;
+            app.request({
+				url: 'config.json',
+				method: 'GET',
+				dataType: 'json',
+				success: function success(data) {
+					var servo = data["servo"];
+					for (var i=0; i<servo.length; i++) {
+						app.range.setValue("#" + servo[i][0] + "-center", servo[i][1]);
+						app.range.setValue("#" + servo[i][0] + "-range", servo[i][2]);
+					}
+				},
+            });
+		},
+        pageAfterOut: function() {
+			sendWSCommand("config:save");
+		},
+	},
+		
+    methods: {
+		onClickTest: function(actionToDo) {
+			sendWSCommand("action:test:" + actionToDo);
+		},
+		
+		onClickServo: function(sliderId, value) {
+			var app = this.$app;
+			var sliderValue = app.range.getValue("#" + sliderId);
+			app.range.setValue("#" + sliderId, sliderValue + value);
+		},
+		
+		onChangeServo: function (e, range) {
+			var $ = this.$;
+			var app = this.$app;
+			var sliderId = $(e.target).attr('id');
+			var sliderValue = app.range.getValue("#" + sliderId);
+			sendWSCommand("servo:" + sliderId.replace('-', ':') + ":" + sliderValue);
+		},
+	}
+}
+</script>
