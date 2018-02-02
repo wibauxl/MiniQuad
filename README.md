@@ -1,6 +1,6 @@
 # MiniQuad
 
-A MiniQuad powered by a [NodeMCU](https://github.com/nodemcu/nodemcu-devkit-v1.0) running an [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer) delivering a [Framework7](http://framework7.io/) application.
+A MiniQuad empowered by a [NodeMCU](https://github.com/nodemcu/nodemcu-devkit-v1.0) running an [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer) delivering a [Framework7](http://framework7.io/) application.
 
 ## Contents
 

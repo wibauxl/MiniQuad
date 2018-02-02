@@ -1,0 +1,43 @@
+<template>
+<div class="page">
+	<div class="navbar">
+		<div class="navbar-inner sliding">
+			<div class="title">MiniQuad - Edit Step</div>
+			<div class="right">
+				<a href="/move/" class="link">Done</a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="block-title" id="parent-move-id">Move a</div>
+		<div class="block-title" id="step-id">Step</div>
+	</div>
+	<div class="toolbar tabbar toolbar-bottom-md">
+		<div class="toolbar-inner sliding">
+			<a href="/home/" class="tab-link">
+				<i class="icon f7-icons">paper_plane</i>
+			</a>
+			<a href="#moves" class="tab-link tab-link-active">
+				<i class="icon f7-icons">data</i>
+			</a>
+			<a href="/settings/" class="tab-link">
+				<i class="icon f7-icons">filter</i>
+			</a>
+		</div>
+	</div>
+</div>
+</template>
+<script>
+return {
+	on: {
+		pageInit: function(e, page) {
+			var query = page.route.query;
+			var $ = this.$;
+			var app = this.$app;
+			var mqStep = (parseInt(query.s) + 1);
+			$("#parent-move-id").html("User move " + app.mqmove);
+			$("#step-id").html("Step " + mqStep);
+		},
+	}
+}
+</script>

@@ -10,6 +10,6 @@ String formatBytes(size_t bytes) {
 
 // sends name:value
 void wsSendValue(const char *name, int value) {
-  ws.printfAll("%s:%u", parameter, value);
+  ws.printfAll("%s:%u", name, value);
 }
 

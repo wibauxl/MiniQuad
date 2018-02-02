@@ -3,6 +3,7 @@
 #include <ArduinoOTA.h>
 #include <FS.h>
 #include <Hash.h>
+#include <DNSServer.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <SPIFFSEditor.h>
@@ -14,8 +15,9 @@
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
+DNSServer dnsServer;
 
-signed long timeKeeper;
+signed long timeStamp;
 int miniQuadState = MINI_QUAD_IDLE;
 
 #include "helperFunctions.hpp"
@@ -42,23 +44,31 @@ void setup() {
   // deal with the other cases
   server.onNotFound(handleNotFound);
 
+  // start a DNS server covering all the 
+  dnsServer.start(53, "*", WiFi.softAPIP());
+
+  // start the web server
   server.begin();
 
+  // start the servos
   startServos();
 
-  timeKeeper = millis();
+  timeStamp = millis();
 }
 
 void loop() {
+  // handle the DNS
+  dnsServer.processNextRequest();
+  
   // handle servo movements
   if (miniQuadState != MINI_QUAD_IDLE) handleServoMove();
 
   // save the configuration is it changed
   if (miniQuadConfig.changed) saveConfig();
   
-  // send the battery value every BATTERY_REFRESH second
-  if (millis() - timeKeeper > (unsigned long)(BATTERY_REFRESH*1000)) {
-    timeKeeper = millis();
+  // update the battery state every BATTERY_REFRESH second
+  if (millis() - timeStamp > (unsigned long)(BATTERY_REFRESH*1000)) {
+    timeStamp = millis();
     updateBatteryState();
   }
 }

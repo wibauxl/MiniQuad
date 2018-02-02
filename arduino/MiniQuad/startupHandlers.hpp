@@ -21,7 +21,7 @@ void startWiFi(char *AP_SSID, char *AP_Password, bool wiFiNeedSetup) {
   Serial.print("Running WebServer on ");
   Serial.println(apIP.toString());
   //if (!wiFiNeedSetup) return;
-  
+
   WiFi.enableSTA(false);
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, netMsk);

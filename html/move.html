@@ -28,7 +28,7 @@
 		<div class="list links-list">
 			<ul>
 				{{#each step}}
-				<li><a href="/step/?s={{@index}}">{{this}}</a></li>
+				<li><a href="/move-step/?s={{@index}}">{{this}}</a></li>
 				{{/each}}
 			</ul>
 		</div>
@@ -61,9 +61,9 @@ return {
 			var query = page.route.query;
 			var $ = this.$;
 			var app = this.$app;
-			var userMoveId = (parseInt(query.m) + 1);
-			$("#move-id").html("User move " + userMoveId);
-			$("#move-name").val("Unused " + userMoveId);
+			if (query.m != undefined) app.mqmove = (parseInt(query.m) + 1);
+			$("#move-id").html("User move " + app.mqmove);
+			$("#move-name").val("Unused " + app.mqmove);
 		},
 	}
 }

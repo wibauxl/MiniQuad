@@ -13,7 +13,7 @@ int miniQuadStep = 0;
 
 int battery = 100;
 
-void sendBatteryState() {
+void broadcastBatteryState() {
   wsSendValue("battery", battery);
 }
 
@@ -23,7 +23,7 @@ void updateBatteryState() {
   battery = map(battery, BATTERY_MIN, BATTERY_MAX, 0, 100);
   if (battery < 0) battery = 0;
   else if (battery > 100) battery = 100;
-  sendBatteryState();
+  broadcastBatteryState();
 }
 
 void startServos() {
