@@ -9,9 +9,10 @@
 #include <SPIFFSEditor.h>
 #include <ArduinoJson.h>
 #include <Servo.h>
+#include <Wire.h>
 
 #include "MiniQuad.h"
-#include "configHandlers.hpp"
+#include "configFunctions.hpp"
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
@@ -22,8 +23,8 @@ int miniQuadState = MINI_QUAD_IDLE;
 
 #include "helperFunctions.hpp"
 #include "miniQuadFunctions.hpp"
-#include "startupHandlers.hpp"
-#include "eventHandlers.hpp"
+#include "startupFunctions.hpp"
+#include "webHandlers.hpp"
 
 void setup() {
 
@@ -44,7 +45,7 @@ void setup() {
   // deal with the other cases
   server.onNotFound(handleNotFound);
 
-  // start a DNS server covering all the 
+  // start a DNS server covering all IPs
   dnsServer.start(53, "*", WiFi.softAPIP());
 
   // start the web server
@@ -61,7 +62,7 @@ void loop() {
   dnsServer.processNextRequest();
   
   // handle servo movements
-  if (miniQuadState != MINI_QUAD_IDLE) handleServoMove();
+  if (miniQuadState != MINI_QUAD_IDLE) handleServoMoves();
 
   // save the configuration is it changed
   if (miniQuadConfig.changed) saveConfig();

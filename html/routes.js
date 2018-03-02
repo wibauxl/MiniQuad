@@ -18,16 +18,16 @@ var routes = [
     },
   },
   {
-    path: '/edit-moves/',
-    componentUrl: './edit-moves.html',
+    path: '/moves-edit/',
+    componentUrl: './moves-edit.html',
   },
   {
-    path: '/move/',
-    componentUrl: './move.html',
+    path: '/move-steps/',
+    componentUrl: './move-steps.html',
   },
   {
-    path: '/move-step/',
-    componentUrl: './move-step.html',
+    path: '/move-step-edit/',
+    componentUrl: './move-step-edit.html',
   },
   {
     path: '/settings/',

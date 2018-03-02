@@ -12,18 +12,31 @@
 			</div>
 			<div class="title">MiniQuad - Moves</div>
 			<div class="right">
-				<a href="/edit-moves/" class="link">Edit</a>
+				<a href="/moves-edit/" class="link">Edit</a>
 			</div>
 		</div>
 	</div>
 	<div class="page-content">
 		<div class="block-title">Moves</div>
-		<div class="list simple-list">
-			<ul>
-				{{#each move}}
-				<li><a href="#" class="list-button item-link mq-list-button">{{this}}</a></li>
-				{{/each}}
-			</ul>
+		<!-- Moves buttons -->
+		<div class="row">
+			<table style="width: 100%; background: #fff">
+				<tr>
+					<td style="width: 32vw"><a href="#" class="mq-moves-button" id="user1" @click="onClickMove">User1</a></td>
+					<td style="width: 32vw"><a href="#" class="mq-moves-button" id="user2" @click="onClickMove">User2</a></td>
+					<td style="width: 32vw"><a href="#" class="mq-moves-button" id="user3" @click="onClickMove">User3</a></td>
+				</tr>
+				<tr>
+					<td><a href="#" class="mq-moves-button" id="user4" @click="onClickMove">User4</a></td>
+					<td><a href="#" class="mq-moves-button mq-active" id="stop-" @click="onClickMove"><i class="icon f7-icons mq-icon">pause_fill</i></a></td>
+					<td><a href="#" class="mq-moves-button mq-hidden" id="user6" @click="onClickMove">User6</a></td>
+				</tr>
+				<tr>
+					<td><a href="#" class="mq-moves-button mq-hidden" id="user7" @click="onClickMove">User7</a></td>
+					<td><a href="#" class="mq-moves-button mq-hidden" id="user8" @click="onClickMove">User8</a></td>
+					<td><a href="#" class="mq-moves-button mq-hidden" id="user9" @click="onClickMove">User9</a></td>
+				</tr-->
+			</table>
 		</div>
 		<!-- speed bar -->
 		<div class="block-title">Move speed</div>
@@ -72,13 +85,24 @@ return {
 	
 	on: {
 		pageInit: function () {
-			var command = "action:moveSpeed:get";
-			console.log("/ws/ < " + command);
-			ws.send(command);
+			sendWSCommand("action:moveSpeed:get");
+			sendWSCommand("battery:get");
+		},
+        pageAfterOut: function() {
+			sendWSCommand("action:move:stop");
 		},
 	},
 	
 	methods: {
+		onClickMove: function(e) {
+			var $ = this.$;
+			var buttonId = $(e.target).parent().attr('id');
+			if (buttonId == null) buttonId = $(e.target).attr('id');
+			sendWSCommand("action:move:" + buttonId);
+			$('.mq-moves-button').removeClass('mq-active');
+			$("#" + buttonId).addClass('mq-active');
+		},
+
 		onChangeMoveSpeed: function (e, range) {
 			var $ = this.$;
 			var app = this.$app;

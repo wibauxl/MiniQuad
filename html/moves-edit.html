@@ -1,0 +1,56 @@
+<template>
+<div class="page">
+	<div class="navbar">
+		<div class="navbar-inner sliding">
+			<div class="title">MiniQuad - Edit moves</div>
+			<div class="right">
+				<a href="/moves/" class="link">Done</a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="list links-list" id="moves-list">
+		</div>
+	</div>
+	<div class="toolbar tabbar toolbar-bottom-md">
+		<div class="toolbar-inner sliding">
+			<a href="/home/" class="tab-link">
+				<i class="icon f7-icons">paper_plane</i>
+			</a>
+			<a href="#moves" class="tab-link tab-link-active">
+				<i class="icon f7-icons">data</i>
+			</a>
+			<a href="/settings/" class="tab-link">
+				<i class="icon f7-icons">filter</i>
+			</a>
+		</div>
+	</div>
+</div>
+</template>
+<script>
+return {
+	on: {
+		pageInit: function(e, page) {
+			app.request.json('moves.json', function (data) {
+				var movesList = "<ul>";
+				// maximum 8 user moves, from 1 to 8
+				for (var um=1; um<=8; um++) {
+					var id = -1;
+					for (var i=0; i<data.length-4; i++) {
+						if (data[i].id == um) {
+							id = um;
+							movesList += "<li><a href='/move-steps/?m=" + data[i].id + "'>" + data[i].n + "</a></li>";
+							break;
+						}
+					}
+					if (id == -1) movesList += "<li><a href='/move-steps/?m=" + um + "&cm=t'><i style='color: grey'>Create user move " + um + "</i></a></li>";
+				}
+				for (var i=data.length-4; i<data.length; i++) 
+					movesList += "<li><a href='/move-steps/?m=" + data[i].id + "'>" + data[i].n + "</a></li>";
+				movesList += "</ul>";
+				$('#moves-list').html(movesList);
+			});
+		},
+	}
+}
+</script>

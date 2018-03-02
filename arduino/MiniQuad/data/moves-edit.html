@@ -11,10 +11,7 @@
 	<div class="page-content">
 		<div class="block-title">Edit moves</div>
 		<div class="list links-list">
-			<ul>
-				{{#each move}}
-				<li><a href="/move/?m={{@index}}">{{this}}</a></li>
-				{{/each}}
+			<ul id="moves-edit-list">
 			</ul>
 		</div>
 	</div>
@@ -35,10 +32,12 @@
 </template>
 <script>
 return {
-	data: function () {
-		return {
-			"move":['Unused 1', 'Unused 2', 'Unused 3', 'Unused 4', 'Unused 6', 'Unused 7', 'Unused 8', 'Unused 9']
-		}
-	},
+	on: {
+		pageInit: function(e, page) {
+			app.request.json('moves.json', function (data) {
+				console.log(data);
+			});
+		},
+	}
 }
 </script>

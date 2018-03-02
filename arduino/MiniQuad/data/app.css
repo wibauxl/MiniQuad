@@ -16,6 +16,24 @@ a.mq-button {
 	display: block;
 }
 
+a.mq-moves-button {
+	width: 28vw;
+	margin: 1vw;
+	height: 60px;
+	line-height: 60px;
+	border: 1px solid #000;
+	border-radius: 5vw;
+	text-align: center;
+	color: #000;
+	display: block;
+	font-size: 18px;
+	font-weight: 600;
+}
+
+.mq-hidden {
+	display: none !important;
+}
+	
 .mq-active {
   background: rgba(128, 128, 128, 0.5);
 }
@@ -32,6 +50,7 @@ a.mq-button {
 .mq-servo-label {
 	width: 11% !important;
 }
+
 .mq-servo-icon {
 	font-size: 22px !important;
 }

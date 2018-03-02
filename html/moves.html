@@ -12,7 +12,7 @@
 			</div>
 			<div class="title">MiniQuad - Moves</div>
 			<div class="right">
-				<a href="/edit-moves/" class="link">Edit</a>
+				<a href="/moves-edit/" class="link">Edit</a>
 			</div>
 		</div>
 	</div>
@@ -22,20 +22,20 @@
 		<div class="row">
 			<table style="width: 100%; background: #fff">
 				<tr>
-					<td style="width: 32vw"><a href="#" class="mq-moves-button" id="user1" @click="onClickMove">User1</a></td>
-					<td style="width: 32vw"><a href="#" class="mq-moves-button" id="user2" @click="onClickMove">User2</a></td>
-					<td style="width: 32vw"><a href="#" class="mq-moves-button" id="user3" @click="onClickMove">User3</a></td>
+					<td style="width: 32vw"><a href="#" class="mq-moves-button mq-hidden" id="m1" @click="onClickMove">User1</a></td>
+					<td style="width: 32vw"><a href="#" class="mq-moves-button mq-hidden" id="m2" @click="onClickMove">User2</a></td>
+					<td style="width: 32vw"><a href="#" class="mq-moves-button mq-hidden" id="m3" @click="onClickMove">User3</a></td>
 				</tr>
 				<tr>
-					<td><a href="#" class="mq-moves-button" id="user4" @click="onClickMove">User4</a></td>
-					<td><a href="#" class="mq-moves-button mq-active" id="stop-" @click="onClickMove"><i class="icon f7-icons mq-icon">pause_fill</i></a></td>
-					<td><a href="#" class="mq-moves-button mq-hidden" id="user6" @click="onClickMove">User6</a></td>
+					<td><a href="#" class="mq-moves-button mq-hidden" id="m4" @click="onClickMove">User4</a></td>
+					<td><a href="#" class="mq-moves-button mq-active" id="stop-move" @click="onClickMove"><i class="icon f7-icons mq-icon">pause_fill</i></a></td>
+					<td><a href="#" class="mq-moves-button mq-hidden" id="m5" @click="onClickMove">User6</a></td>
 				</tr>
 				<tr>
-					<td><a href="#" class="mq-moves-button mq-hidden" id="user7" @click="onClickMove">User7</a></td>
-					<td><a href="#" class="mq-moves-button mq-hidden" id="user8" @click="onClickMove">User8</a></td>
-					<td><a href="#" class="mq-moves-button mq-hidden" id="user9" @click="onClickMove">User9</a></td>
-				</tr-->
+					<td><a href="#" class="mq-moves-button mq-hidden" id="m6" @click="onClickMove">User6</a></td>
+					<td><a href="#" class="mq-moves-button mq-hidden" id="m7" @click="onClickMove">User7</a></td>
+					<td><a href="#" class="mq-moves-button mq-hidden" id="m8" @click="onClickMove">User8</a></td>
+				</tr>
 			</table>
 		</div>
 		<!-- speed bar -->
@@ -76,17 +76,22 @@
 </div>
 </template>
 <script>
-return {
-	data: function () {
-		return {
-			"move":['Dance', 'Bow', 'Lie', 'Jump']
-		}
-	},
-	
+return {	
 	on: {
 		pageInit: function () {
 			sendWSCommand("action:moveSpeed:get");
 			sendWSCommand("battery:get");
+			app.request.json('moves.json', function (data) {
+				// moves.json contains all moves including forward, backward, left and right
+				for (var i=0; i<data.length-4; i++) {
+					$("#m" + data[i].id).removeClass('mq-hidden');
+					$("#m" + data[i].id).html(data[i].n);
+				}
+			});
+		},
+		
+        pageAfterOut: function() {
+			sendWSCommand("action:move:stop");
 		},
 	},
 	

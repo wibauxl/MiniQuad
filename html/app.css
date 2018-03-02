@@ -60,6 +60,62 @@ a.mq-moves-button {
 	text-align: left !important;
 }
 
+.mq-list-button:after {
+	height: 2px !important;;
+}
+
+.mq-step td {
+	text-align: center;
+	vertical-align: middle;
+}
+
+.mq-step a {
+	height: 68px !important;
+}
+
+.mq-step table {
+	width: 100%; 
+	border-collapse: collapse;
+}
+
+.mq-step-right-leg {
+	text-align: center;
+	border-right: black 1px solid;
+	border-top: black 1px solid;
+	width: 21%;
+	font-size: 13px;
+}
+
+.mq-step-right-hip {
+	text-align: center;
+	vertical-align: middle;
+	border-top: black 1px solid;
+	width: 21%;
+	font-size: 13px;
+}
+
+.mq-step-left-leg {
+	text-align: center;
+	vertical-align: middle;
+	border-left: black 1px solid;
+	border-top: black 1px solid;
+	width: 21%;
+	font-size: 13px;
+}
+
+.mq-step-left-hip {
+	text-align: center;
+	vertical-align: middle;
+	border-top: black 1px solid;
+	width: 21%;
+	font-size: 13px;
+}
+
+.mq-step-front {
+	width: 18%;
+	font-size: 12px;
+}
+
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
@@ -120,6 +176,10 @@ a.mq-moves-button {
   -moz-font-feature-settings: "liga";
   font-feature-settings: "liga";
   text-align: center;
+}
+
+.links-list a:after {
+  height: 2px !important;
 }
 
 .list-block-label {

@@ -3,8 +3,12 @@
 
 #define MINIQUAD_DEBUG 1
 
+#define DNS_PORT = 53;
+
 #define HOST_NAME "MiniQuad"
-#define MINI_QUAD_PASSWORD "miniquad"
+#define MDNS_HOST_NAME "miniquad"
+//#define MINI_QUAD_PASSWORD "miniquad"
+#define MINI_QUAD_PASSWORD NULL
 IPAddress apIP(192, 168, 1, 1);
 IPAddress netMsk(255, 255, 255, 0);
 
@@ -13,6 +17,8 @@ IPAddress netMsk(255, 255, 255, 0);
 #define BATTERY_REFRESH 10                /* seconds between 2 battery value measurements */
 #define BATTERY_MIN (32*1024*100/10/570)  /* 3.2V : 100/570 divider : scale of 0 to 1024 */ 
 #define BATTERY_MAX (43*1024*100/10/570)  /* 4.3V : 100/570 divider : scale of 0 to 1024 */ 
+
+#define USE_PWM_SERVO_DRIVER 1
 
 #define NB_SERVOS 8
 
@@ -35,8 +41,8 @@ IPAddress netMsk(255, 255, 255, 0);
 #define BLH D2
 #define BLL D3
 
-const int MQServoPins[NB_SERVOS] = { FLH, FLL, FRH, FRL, BRH, BRL, BLH, BLL };
-String MQServoNames[NB_SERVOS] = { "FLH", "FLL", "FRH", "FRL", "BRH", "BRL", "BLH", "BLL" };
+const int MQServoPins[NB_SERVOS] = { FLL, FLH, FRH, FRL, BLL, BRH, BLH, BLL };
+String MQServoNames[NB_SERVOS] = { "FLH", "FLL", "FRH", "FRL", "BLL", "BLH", "BLH", "BLL" };
 
 #define MINI_QUAD_IDLE 0
 

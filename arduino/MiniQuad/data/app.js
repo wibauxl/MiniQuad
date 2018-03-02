@@ -7,20 +7,23 @@ if (document.location.search.indexOf('theme=') >= 0) {
   theme = document.location.search.split('theme=')[1].split('&')[0];
 }
 
+var mqmove = -1;
+
 // Init App
 var app = new Framework7({
   root: '#app',
+  id: 'com.github.miniquad',
   theme: theme,
   routes: routes,
-  animate: false,
+  mqmove: mqmove,
 });
 
-// Create a WebSocket to get simple values quickly
+// Create a WebSocket to get/set simple values quickly
 // values are sent as parameter_name:parameter_value
 var ws = new WebSocket('ws://'+document.location.host+'/ws',['arduino']);
 ws.binaryType = "arraybuffer";
 ws.onopen = function(e){
-    console.log("[" + (new Date()).getTime() + "] /ws/ connected");
+    console.log("/ws/ <> connected");
 };
 ws.onmessage = function(e) {
 	var data = e.data.split(':');
@@ -38,10 +41,10 @@ ws.onmessage = function(e) {
 };
 
 sendWSCommand = function(command) {
-	console.log("[" + (new Date()).getTime() + "] /ws/ < " + command);
+	console.log("/ws/ < " + command);
 	ws.send(command);
 };
 
 // Load the initial page
 // See https://blog.framework7.io/mastering-v2-router-958ea2dbd24f
-app.views.create('.view', {url: '/home/'});
+app.views.create('.view-main', {url: '/home/'});

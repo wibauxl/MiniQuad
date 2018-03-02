@@ -1,0 +1,151 @@
+<template>
+<div class="page">
+	<div class="navbar">
+		<div class="navbar-inner sliding">
+			<div class="title">MiniQuad - Edit Step</div>
+			<div class="right">
+				<a href="/moves-steps/" class="link" id="move-step-link-back">Done</a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="block block-strong" style="font-size: 18px">
+			Move '<span id="move-step-move-name"></span>', step <span id="move-step-step-number"></span>
+				<span id="move-step-sid" style="display: none"></span><span id="move-step-mid" style="display: none"></span>
+		</div>
+		<!-- servo target position -->
+		<div class="block-title">Servo target positions</div>
+		<div class="list simple-list">
+			<ul>
+				{{#each servoTarget}}
+				<li class="item-row">
+					<div class="item-cell flex-shrink-0 mq-servo-label">{{this}}</div>
+					<div class="item-cell width-auto flex-shrink-0">
+						<a href="#" class="link icon-only" @click="onClickMoveStepSlider('move-step-{{@index}}', -1)">
+							<i class="icon f7-icons ios-only mq-servo-icon">delete_round</i>
+							<i class="icon material-icons md-only mq-servo-icon">remove</i>
+						</a>
+					</div>
+					<div class="item-cell flex-shrink-3">
+						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeMoveStepSlider" id="move-step-{{@index}}"
+							data-min="-100" data-max="100" data-step="1" data-value="0"></div>
+					</div>
+					<div class="item-cell width-auto flex-shrink-0">
+						<a href="#" class="link icon-only" @click="onClickMoveStepSlider('move-step-{{@index}}', 1)">
+							<i class="icon f7-icons ios-only mq-servo-icon">add_round</i>
+							<i class="icon material-icons md-only mq-servo-icon">add</i>
+						</a>
+					</div>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+		<!-- execution time -->
+		<div class="block-title">Time required to reach target positions</div>
+		<div class="list simple-list">
+			<ul>
+				<li>
+					<div class="item-cell width-auto flex-shrink-0">
+						<a href="#" class="link icon-only" @click="onClickMoveStepSlider('move-step-8', -1)">
+							<i class="icon f7-icons ios-only">delete_round</i>
+							<i class="icon material-icons md-only">remove</i>
+						</a>
+					</div>
+					<div class="item-cell flex-shrink-3">
+						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeMoveStepSlider" id="move-step-8"
+							data-min="0" data-max="100" data-step="1" data-value="0"></div>
+					</div>
+					<div class="item-cell width-auto flex-shrink-0">
+						<a href="#" class="link icon-only" @click="onClickMoveStepSlider('move-step-8', 1)">
+							<i class="icon f7-icons ios-only">add_round</i>
+							<i class="icon material-icons md-only">add</i>
+						</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="list links-list"></div>
+		<div class="list">
+			<ul>
+				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickMoveStepAction('duplicate')">Duplicate</a></li>
+				<li id="move-step-delete"><a href="#" class="list-button item-link mq-list-button" style="color: red" @click="onClickMoveStepAction('delete')">Delete</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="toolbar tabbar toolbar-bottom-md">
+		<div class="toolbar-inner sliding">
+			<a href="/home/" class="tab-link">
+				<i class="icon f7-icons">paper_plane</i>
+			</a>
+			<a href="#moves" class="tab-link tab-link-active">
+				<i class="icon f7-icons">data</i>
+			</a>
+			<a href="/settings/" class="tab-link">
+				<i class="icon f7-icons">filter</i>
+			</a>
+		</div>
+	</div>
+</div>
+</template>
+<script>
+return {
+	data: function () {
+		return {
+			"servoTarget":['RRL', 'RRH', 'RLH', 'RLL', 'FRL', 'FRH', 'FLH', 'BLL']
+		}
+	},
+	
+	on: {
+		pageInit: function(e, page) {
+			var query = page.route.query;
+			var $ = this.$;
+			var app = this.$app;
+			var moveId = query.m;
+			var stepId = query.s;
+			var stepNb = parseInt(stepId);
+			$("#move-step-mid").html(moveId);
+			$("#move-step-move-name").html("Move-" + moveId);
+			$("#move-step-sid").html(stepId);
+			$("#move-step-step-number").html(stepNb+1);
+			$('#move-step-link-back').attr('href', "/move-steps/?m=" + moveId);
+			app.request.json("m" + moveId + ".json", function (data) {
+				$("#move-step-move-name").html(data.name);	
+				if (stepNb <= data.steps.length) {
+					if (stepNb == data.steps.length) stepNb--;
+					for (var i=0; i<9; i++) app.range.setValue("#move-step-" + i, data.steps[stepNb][i]);
+				} else {
+					$('#move-step-delete').css('display', 'none');
+				}
+			});
+		}
+	},
+	
+    methods: {
+		onClickMoveStepAction: function(actionToDo) {
+			var $ = this.$;
+			var app = this.$app;
+			var moveId = $("#move-step-mid").html();
+			var stepId = $("#move-step-sid").html();
+			sendWSCommand("config:move:" + moveId + ":" + stepId + ":" + actionToDo);
+			var router = this.$router;
+			router.navigate("/moves-steps/?m=" + moveId);
+		},
+		
+		onClickMoveStepSlider: function(sliderId, value) {
+			var app = this.$app;
+			var sliderValue = app.range.getValue("#" + sliderId);
+			app.range.setValue("#" + sliderId, sliderValue + value);
+		},
+		
+		onChangeMoveStepSlider: function(e, range) {
+			var $ = this.$;
+			var app = this.$app;
+			var moveId = $("#move-step-mid").html();
+			var stepId = $("#move-step-sid").html();
+			var sliderId = $(e.target).attr('id');
+			var sliderValue = app.range.getValue("#" + sliderId);
+			sendWSCommand("config:move:" + moveId + ":" + stepId + ":" + sliderId.substring(10) + ":" + sliderValue);
+		}
+	}
+}
+</script>

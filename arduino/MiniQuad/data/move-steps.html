@@ -56,6 +56,12 @@ return {
 		}
 	},
 
+    methods: {
+      openAlert: function(m) {
+        var self = this.$app.dialog.alert('Hello world!');
+      },
+    },
+
 	on: {
 		pageInit: function(e, page) {
 			var query = page.route.query;

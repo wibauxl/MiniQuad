@@ -7,7 +7,7 @@
 	</div>
 	<div id="settings" class="page-content">
 		<div class="block-title">Servo actions</div>
-		<div class="list simple-list">
+		<div class="list">
 			<ul>
 				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('center')">Center all</a></li>
 				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('hips-range')">Test hips range</a></li>
@@ -21,17 +21,17 @@
 				<li class="item-row">
 					<div class="item-cell flex-shrink-0 mq-servo-label">{{this}}</div>
 					<div class="item-cell width-auto flex-shrink-0">
-						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-center', -1)">
+						<a href="#" class="link icon-only" @click="onClickServoSlider('{{this}}-center', -1)">
 							<i class="icon f7-icons ios-only mq-servo-icon">delete_round</i>
 							<i class="icon material-icons md-only mq-servo-icon">remove</i>
 						</a>
 					</div>
 					<div class="item-cell flex-shrink-3">
-						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeServo" id="{{this}}-center"
+						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeServoSlider" id="{{this}}-center"
 							data-min="70" data-max="110" data-step="1" data-value="90"></div>
 					</div>
 					<div class="item-cell width-auto flex-shrink-0">
-						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-center', 1)">
+						<a href="#" class="link icon-only" @click="onClickServoSlider('{{this}}-center', 1)">
 							<i class="icon f7-icons ios-only mq-servo-icon">add_round</i>
 							<i class="icon material-icons md-only mq-servo-icon">add</i>
 						</a>
@@ -48,17 +48,17 @@
 				<li class="item-row">
 					<div class="item-cell flex-shrink-0 mq-servo-label">{{this}}</div>
 					<div class="item-cell width-auto flex-shrink-0">
-						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-range', -1)">
+						<a href="#" class="link icon-only" @click="onClickServoSlider('{{this}}-range', -1)">
 							<i class="icon f7-icons ios-only mq-servo-icon">delete_round</i>
 							<i class="icon material-icons md-only mq-servo-icon">remove</i>
 						</a>
 					</div>
 					<div class="item-cell flex-shrink-3">
-						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeServo" id="{{this}}-range"
+						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeServoSlider" id="{{this}}-range"
 							data-min="0" data-max="60" data-step="1" data-value="40"></div>
 					</div>
 					<div class="item-cell width-auto flex-shrink-0">
-						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-range', 1)">
+						<a href="#" class="link icon-only" @click="onClickServoSlider('{{this}}-range', 1)">
 							<i class="icon f7-icons ios-only mq-servo-icon">add_round</i>
 							<i class="icon material-icons md-only mq-servo-icon">add</i>
 						</a>
@@ -92,7 +92,7 @@
 return {
 	data: function () {
 		return {
-			"servo":['FLH', 'FRH', 'BRH', 'BLH', 'FLL', 'FRL', 'BRL', 'BLL']
+			"servo":['RRL', 'RRH', 'RLH', 'RLL', 'FRL', 'FRH', 'FLH', 'BLL']
 		}
 	},
 
@@ -123,13 +123,13 @@ return {
 			sendWSCommand("action:test:" + actionToDo);
 		},
 		
-		onClickServo: function(sliderId, value) {
+		onClickServoSlider: function(sliderId, value) {
 			var app = this.$app;
 			var sliderValue = app.range.getValue("#" + sliderId);
 			app.range.setValue("#" + sliderId, sliderValue + value);
 		},
 		
-		onChangeServo: function (e, range) {
+		onChangeServoSlider: function (e, range) {
 			var $ = this.$;
 			var app = this.$app;
 			var sliderId = $(e.target).attr('id');

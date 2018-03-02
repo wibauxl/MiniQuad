@@ -1,6 +1,4 @@
 
-
-
 void initConfig() {
   miniQuadConfig.changed = true;
   String hostName = String(ESP.getChipId(), HEX);

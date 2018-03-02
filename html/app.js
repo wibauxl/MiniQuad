@@ -7,15 +7,12 @@ if (document.location.search.indexOf('theme=') >= 0) {
   theme = document.location.search.split('theme=')[1].split('&')[0];
 }
 
-var mqmove = -1;
-
 // Init App
 var app = new Framework7({
   root: '#app',
   id: 'com.github.miniquad',
   theme: theme,
   routes: routes,
-  mqmove: mqmove,
 });
 
 // Create a WebSocket to get/set simple values quickly

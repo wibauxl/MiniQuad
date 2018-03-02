@@ -20,11 +20,17 @@ void startWiFi(char *AP_SSID, char *AP_Password, bool wiFiNeedSetup) {
   Serial.println(AP_SSID);
   Serial.print("Running WebServer on ");
   Serial.println(apIP.toString());
-  //if (!wiFiNeedSetup) return;
+
+  // start an http MDNS service called by miniquad.local
+  // MDNS.begin(MDNS_HOST_NAME);
+  // MDNS.addService("http", "tcp", 80);
+  
+  if (!wiFiNeedSetup) return;
 
   WiFi.enableSTA(false);
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, netMsk);
-  WiFi.softAP(AP_SSID, AP_Password);
+  if (AP_Password != NULL) WiFi.softAP(AP_SSID, AP_Password);
+  else WiFi.softAP(AP_SSID);
 }
 
