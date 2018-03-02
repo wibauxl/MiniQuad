@@ -64,11 +64,6 @@ a.mq-moves-button {
 	height: 2px !important;;
 }
 
-.mq-step td {
-	text-align: center;
-	vertical-align: middle;
-}
-
 .mq-step a {
 	height: 68px !important;
 }
@@ -78,37 +73,31 @@ a.mq-moves-button {
 	border-collapse: collapse;
 }
 
-.mq-step-right-leg {
+.mq-step td {
 	text-align: center;
+	vertical-align: middle;
+}
+
+.mq-step-hip {
+	text-align: center;
+	border-top: black 1px solid;
+	width: 21%;
+	font-size: 13px;
+}
+
+.mq-step-leg {
+	text-align: center;
+/*	border-top: black 1px solid; */
+	width: 21%;
+	font-size: 13px;
+}
+
+.mq-step-right {
 	border-right: black 1px solid;
-	border-top: black 1px solid;
-	width: 21%;
-	font-size: 13px;
 }
 
-.mq-step-right-hip {
-	text-align: center;
-	vertical-align: middle;
-	border-top: black 1px solid;
-	width: 21%;
-	font-size: 13px;
-}
-
-.mq-step-left-leg {
-	text-align: center;
-	vertical-align: middle;
+.mq-step-left {
 	border-left: black 1px solid;
-	border-top: black 1px solid;
-	width: 21%;
-	font-size: 13px;
-}
-
-.mq-step-left-hip {
-	text-align: center;
-	vertical-align: middle;
-	border-top: black 1px solid;
-	width: 21%;
-	font-size: 13px;
 }
 
 .mq-step-front {

@@ -22,7 +22,8 @@ signed long timeStamp;
 int miniQuadState = MINI_QUAD_IDLE;
 
 #include "helperFunctions.hpp"
-#include "miniQuadFunctions.hpp"
+#include "moveFunctions.hpp"
+#include "messagingFunctions.hpp"
 #include "startupFunctions.hpp"
 #include "webHandlers.hpp"
 
