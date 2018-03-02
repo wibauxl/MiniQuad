@@ -1,8 +1,8 @@
 [
-    {"n":"Danse","id":4},
-    {"n":"Salute","id":5},
-    {"n":"Forward","id":10},
-    {"n":"Right","id":11},
-    {"n":"Backward","id":12},
-    {"n":"Left","id":13}
+	{"n":"Danse","id":4},
+	{"n":"Salute","id":5},
+	{"n":"Forward","id":10},
+	{"n":"Right","id":11},
+	{"n":"Backward","id":12},
+	{"n":"Left","id":13}
 ]

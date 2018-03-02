@@ -11,39 +11,36 @@
 #include <Servo.h>
 #include <Wire.h>
 
-#include "MiniQuad.h"
-#include "configFunctions.hpp"
-
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 DNSServer dnsServer;
 
-signed long timeStamp;
-int miniQuadState = MINI_QUAD_IDLE;
-
+#include "MiniQuad.h"
+#include "configFunctions.hpp"
 #include "helperFunctions.hpp"
 #include "moveFunctions.hpp"
-#include "messagingFunctions.hpp"
+#include "messageFunctions.hpp"
 #include "startupFunctions.hpp"
 #include "webHandlers.hpp"
 
 void setup() {
-
   Serial.begin(115200);
 
   // start the file system
   startSPIFFS();
-  // load the configuration
+  // load the configurations
   loadConfig();
+  loadMovesConfig();
+  
   // start the WiFi
   startWiFi(miniQuadConfig.hostName, MINI_QUAD_PASSWORD, miniQuadConfig.wiFiNeedSetup);
 
   // create an event handler for the websocket server
   ws.onEvent(handleWebSocketEvent);
+
+  // add handlers to the server
   server.addHandler(&ws);
   server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
-  
-  // deal with the other cases
   server.onNotFound(handleNotFound);
 
   // start a DNS server covering all IPs
@@ -63,10 +60,11 @@ void loop() {
   dnsServer.processNextRequest();
   
   // handle servo movements
-  if (miniQuadState != MINI_QUAD_IDLE) handleServoMoves();
+  handleServoMoves();
 
-  // save the configuration is it changed
-  if (miniQuadConfig.changed) saveConfig();
+  // save the configuration is they have changed
+  saveConfig();
+  saveMovesConfig();
   
   // update the battery state every BATTERY_REFRESH second
   if (millis() - timeStamp > (unsigned long)(BATTERY_REFRESH*1000)) {

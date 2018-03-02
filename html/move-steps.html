@@ -111,7 +111,8 @@ return {
 									"</table>" +
 								"</a></li>";
 					}
-					stepsList += "<li><a href='/move-step-edit/?m=" + moveId + "&s=" + data.steps.length + "'><i style='color: grey'>Create step</i></a></li>";
+					if (data.steps.length < 30) 
+						stepsList += "<li><a href='/move-step-edit/?m=" + moveId + "&s=" + data.steps.length + "'><i style='color: grey'>Create step</i></a></li>";
 					stepsList += "</ul>";
 					$("#move-steps-list").html(stepsList);
 				});

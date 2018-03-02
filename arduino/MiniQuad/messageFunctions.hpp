@@ -1,17 +1,7 @@
-int battery = 100;
+/**
+ * 
+ */
 
-void broadcastBatteryState() {
-  wsSendValue("battery", battery);
-}
-
-void updateBatteryState() {
-  // int battery = analogRead(A0);
-  battery = BATTERY_MAX - timeStamp/4000;
-  battery = map(battery, BATTERY_MIN, BATTERY_MAX, 0, 100);
-  if (battery < 0) battery = 0;
-  else if (battery > 100) battery = 100;
-  broadcastBatteryState();
-}
 
 void handleServoAction(String params) {
   // getting the action as [test | move | speed]:actionId;
@@ -34,15 +24,28 @@ void handleServoAction(String params) {
     else {
       miniQuadState = MINI_QUAD_MOVE;
       miniQuadStep = 0;
-      loadMoveConfig(actionId);
+      setMove(actionId.toInt());
     }
   }
 }
 
-void handleMiniQuadMessage(String message) {
-  if (message.equals("config:save")) miniQuadConfig.changed = true;
-  else if (message.startsWith("servo:calibrate")) servoSetCalibration(message.substring(16));
-  else if (message.startsWith("action")) handleServoAction(message.substring(7));
-  else if (message.startsWith("battery:get")) broadcastBatteryState();
+void broadcastBatteryState() {
+  wsSendValue("battery", battery);
 }
 
+void updateBatteryState() {
+  // int battery = analogRead(A0);
+  battery = BATTERY_MAX - timeStamp/4000;
+  battery = map(battery, BATTERY_MIN, BATTERY_MAX, 0, 100);
+  if (battery < 0) battery = 0;
+  else if (battery > 100) battery = 100;
+  broadcastBatteryState();
+}
+
+void handleMiniQuadMessage(String message) {
+  if (message.equals("config:save")) miniQuadConfig.changed = true;
+  else if (message.startsWith("servo:calibrate")) setServoCalibration(message.substring(16));
+  else if (message.startsWith("action")) handleServoAction(message.substring(7));
+  else if (message.startsWith("battery:get")) broadcastBatteryState();
+  else if (message.startsWith("config:move")) setMoveConfiguration(message.substring(12));
+}

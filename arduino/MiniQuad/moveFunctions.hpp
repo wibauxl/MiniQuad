@@ -1,3 +1,23 @@
+/**
+ * Pages will call moves.json and m1 to m13.json, these are generated on the fly from the moves to avoid reading from flash all the time
+ *    moves.json   
+ *    [
+ *      {"n":"Danse","id":2},
+ *      {"n":"Forward","id":10}
+ *    ]
+ *    
+ *    m1.json
+ *    {
+ *      "name" : "Salute",
+ *      "steps" : [
+ *         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+ *         [-100, -100, -100, -100, 0, 0, 0, 0, 20]
+ *       ]
+ *    }
+ *
+ * Moves are stored as move1.json to move13.json where move10 to move13 are forward, right, backward and left
+ */
+
 #ifdef USE_PWM_SERVO_DRIVER
 #include <Adafruit_PWMServoDriver.h>
 #define SERVO_MIN_PULSE 150
@@ -13,7 +33,9 @@ Servo MQServos[8];
 #define MINI_QUAD_TEST_HIPS_RANGE 3
 #define MINI_QUAD_TEST_LEGS_RANGE 4
 
+uint8_t miniQuadState = MINI_QUAD_IDLE;
 int miniQuadStep = 0;
+String movesJson;
 
 // write in degrees -127 to +127
 void servoRawWrite(uint8_t servoNb, int8_t position) {
@@ -39,7 +61,7 @@ void startServos() {
   for (int i=0; i<NB_SERVOS; i++) servoRawWrite(i, miniQuadConfig.servoCenter[i]);
 }
 
-void servoSetCalibration(String params) {
+void setServoCalibration(String params) {
   // getting the servo to set as id:[center | range]:value
   String servoId = params.substring(0, params.indexOf(":"));
   int servoNb = 0;
@@ -59,5 +81,32 @@ void servoSetCalibration(String params) {
 }
 
 void handleServoMoves() {
+  if (miniQuadState == MINI_QUAD_IDLE) return;
+}
+
+
+void setMove(int moveId) {
+}
+
+void setMoveConfiguration(String params) {
+  
+}
+
+void loadMovesConfig() {
+
+  // create a json file containing
+  movesJson = "[";
+  bool hasMove = false;
+  for (int i=0; i<NB_MOVES; i++) {
+    if (miniQuadMovesConfig[i].name.equals("")) continue;
+    if (hasMove) movesJson += ",";
+    movesJson += "{\"n\":\"" + miniQuadMovesConfig[i].name + "\",\"id\":" + i + "}";
+    hasMove = true;
+  }
+  movesJson += "]";
+}
+
+void saveMovesConfig() {
+}
 }
 

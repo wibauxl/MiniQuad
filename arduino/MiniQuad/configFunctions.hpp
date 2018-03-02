@@ -48,6 +48,7 @@ void loadConfig() {
 }
 
 void saveConfig() {
+  if (!miniQuadConfig.changed) return;
   StaticJsonBuffer<1024> jsonBuffer;
   JsonObject& jsonConfig = jsonBuffer.createObject();
   jsonConfig["host"] = miniQuadConfig.hostName;
