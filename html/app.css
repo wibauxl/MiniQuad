@@ -16,7 +16,7 @@ a.mq-button {
 	display: block;
 }
 
-a.mq-moves-button {
+a.mq-custom-move-button {
 	width: 28vw;
 	margin: 1vw;
 	height: 60px;
@@ -93,11 +93,11 @@ a.mq-moves-button {
 }
 
 .mq-step-right {
-	border-right: black 1px solid;
+	border-left: black 1px solid;
 }
 
 .mq-step-left {
-	border-left: black 1px solid;
+	border-right: black 1px solid;
 }
 
 .mq-step-front {

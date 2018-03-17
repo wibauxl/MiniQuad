@@ -48,17 +48,6 @@
 </template>
 <script>
 return {
-    methods: {
-		onClickAction: function(actionToDo) {
-			var $ = this.$;
-			var app = this.$app;
-			var moveId = $("#move-id").html();
-			sendWSCommand("config:move:" + moveId + ":" + actionToDo);
-			var router = this.$router;
-			router.navigate('/moves-edit/');
-		}
-	},
-
 	on: {
 		pageInit: function(e, page) {
 			var query = page.route.query;
@@ -124,8 +113,19 @@ return {
 			var moveId = $("#move-id").html();
 			var moveName = $("#move-name").val();
 			if (moveName === '') moveName = "Move-" + moveId;
-			sendWSCommand("config:move:" + moveId + ":name:" + moveName);
+			sendWSCommand("config:move:" + moveId + ":save:" + moveName);
 		},	
+	},
+	
+	    methods: {
+		onClickAction: function(actionToDo) {
+			var $ = this.$;
+			var app = this.$app;
+			var moveId = $("#move-id").html();
+			sendWSCommand("config:move:" + moveId + ":" + actionToDo);
+			var router = this.$router;
+			router.navigate('/moves-edit/');
+		}
 	}
 }
 </script>

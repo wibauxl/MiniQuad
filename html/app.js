@@ -16,7 +16,7 @@ var app = new Framework7({
 });
 
 // Create a WebSocket to get/set simple values quickly
-// values are sent as parameter_name:parameter_value
+// values are sent as parameter_name[:target]:parameter_value
 var ws = new WebSocket('ws://'+document.location.host+'/ws',['arduino']);
 ws.binaryType = "arraybuffer";
 ws.onopen = function(e){
@@ -25,15 +25,15 @@ ws.onopen = function(e){
 ws.onmessage = function(e) {
 	var data = e.data.split(':');
 	var parameter = data[0];
-	var value = parseInt(data[1]);
-	console.log("[" + (new Date()).getTime() + "] /ws/ > " + parameter + "=" + value);
-	if (parameter == "battery") {
+	console.log("[" + (new Date()).getTime() + "] /ws/ > " + (data.length > 2 ? data[0] + ":" + data[1] + "=" + data[2] : data[0] + "=" + data[1]));
+	if (data[0] == "battery") {
+		var value = parseInt(data[1]);
 		$('.mq-battery-text').html((value < 100 ? " " : "") + (value < 10 ? " " : "") + value + "%");
 		$('.mq-battery-fill').attr('width', value);
-	} else if (parameter == "speed") {
-		app.range.setValue("#mq-speed", value);
-	} else if (parameter == "moveSpeed") {
-		app.range.setValue("#mq-moves-speed", value);
+	} else if (data[0] == "speed") {
+		var value = parseInt(data[2]);	
+		if (data[1] == "main") app.range.setValue("#mq-speed", value);
+		else app.range.setValue("#mq-custom-move-speed", value);
 	}
 };
 

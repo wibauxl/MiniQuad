@@ -9,7 +9,11 @@
 		</div>
 	</div>
 	<div class="page-content">
-		<div class="list links-list" id="moves-list">
+		<div class="list links-list" id="moves-list"></div>
+		<div class="list" id="moves-list-actions">
+			<ul>
+				<li><a href="/move-import/" class="list-button item-link mq-list-button">Import move</a></li>
+			</ul>
 		</div>
 	</div>
 	<div class="toolbar tabbar toolbar-bottom-md">
@@ -45,10 +49,12 @@ return {
 					}
 					if (id == -1) movesList += "<li><a href='/move-steps/?m=" + um + "&cm=t'><i style='color: grey'>Create user move " + um + "</i></a></li>";
 				}
+				// list the default moves
 				for (var i=data.length-4; i<data.length; i++) 
 					movesList += "<li><a href='/move-steps/?m=" + data[i].id + "'>" + data[i].n + "</a></li>";
 				movesList += "</ul>";
 				$('#moves-list').html(movesList);
+				if (data.length == (8+4)) $('#moves-list-actions').css('display', 'none');
 			});
 		},
 	}

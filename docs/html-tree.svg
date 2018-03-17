@@ -156,9 +156,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="435.98802"
-     inkscape:cy="762.85856"
+     inkscape:zoom="0.64426487"
+     inkscape:cx="372.04724"
+     inkscape:cy="526.1811"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -175,7 +175,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -186,56 +186,56 @@
     <rect
        style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect6629"
-       width="80.635201"
-       height="32.541859"
-       x="74.587257"
-       y="187.52789" />
+       width="109.76342"
+       height="32.513042"
+       x="45.375935"
+       y="187.61099" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="97.091751"
+       x="82.444534"
        y="208.90514"
        id="text6631"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan6633"
-         x="97.091751"
+         x="82.444534"
          y="208.90514">home</tspan></text>
     <rect
-       y="265.84976"
-       x="74.587257"
-       height="32.541859"
-       width="80.635201"
+       y="265.86349"
+       x="45.375935"
+       height="32.513042"
+       width="109.76342"
        id="rect6635"
        style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        sodipodi:linespacing="125%"
        id="text6637"
        y="287.17166"
-       x="94.140701"
+       x="54.078445"
        style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
          y="287.17166"
-         x="94.140701"
+         x="54.078445"
          id="tspan6639"
-         sodipodi:role="line">moves</tspan></text>
+         sodipodi:role="line">custom-moves</tspan></text>
     <rect
        style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect6641"
-       width="80.635201"
-       height="32.541859"
-       x="74.587257"
-       y="342.67712" />
+       width="109.76342"
+       height="32.513042"
+       x="45.375935"
+       y="342.62283" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="90.109329"
+       x="75.462112"
        y="363.94327"
        id="text6643"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan6645"
-         x="90.109329"
+         x="75.462112"
          y="363.94327">settings</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Mstart);marker-end:url(#Arrow1Mend)"
@@ -357,7 +357,7 @@
          sodipodi:role="line"
          id="tspan8883"
          x="382.84784"
-         y="291.71735">?m=x</tspan></text>
+         y="291.71735">?m=M</tspan></text>
     <path
        sodipodi:nodetypes="cc"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#marker8897)"
@@ -424,7 +424,7 @@
          y="291.71735"
          x="524.26917"
          id="tspan9677"
-         sodipodi:role="line">?m=x&amp;s=y</tspan></text>
+         sodipodi:role="line">?m=M&amp;s=S</tspan></text>
     <path
        inkscape:connector-curvature="0"
        id="path9679"

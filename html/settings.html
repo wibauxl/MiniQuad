@@ -10,8 +10,8 @@
 		<div class="list">
 			<ul>
 				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('center')">Center all</a></li>
-				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('hips-range')">Test hips range</a></li>
-				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('legs-range')">Test legs range</a></li>
+				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('range:hips')">Test hips range</a></li>
+				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('range:legs')">Test legs range</a></li>
 			</ul>
 		</div>
 		<div class="block-title">Servo centers</div>
@@ -114,7 +114,7 @@ return {
             });
 		},
         pageAfterOut: function() {
-			sendWSCommand("config:save");
+			sendWSCommand("config:calibration:save");
 		},
 	},
 		
@@ -134,7 +134,7 @@ return {
 			var app = this.$app;
 			var sliderId = $(e.target).attr('id');
 			var sliderValue = app.range.getValue("#" + sliderId);
-			sendWSCommand("servo:" + sliderId.replace('-', ':') + ":" + sliderValue);
+			sendWSCommand("config:calibrate:" + sliderId.replace('-', ':') + ":" + sliderValue);
 		},
 	}
 }

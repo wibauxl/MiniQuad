@@ -29,17 +29,22 @@ void handleWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, 
   }
 }
 
-// deals with the non-static
+// deals with the dynamic json created by the 
 void handleDynamicJsonRequest(AsyncWebServerRequest *request) {
 #ifdef MINIQUAD_DEBUG  
   Serial.printf("Dealing with JSON request: http://%s%s\n", request->host().c_str(), request->url().c_str());
 #endif
-  if (request->url().equals("moves.json")) {
     AsyncResponseStream *response = request->beginResponseStream("text/json");
     response->addHeader("Server", String(miniQuadConfig.hostName));
+  if (request->url().equals("moves.json")) {
     response->print(movesJson);
-    request->send(response);
+  } else {
+    // getting mM.json
+    int moveId = request->url().substring(1, request->url().indexOf(".")).toInt();     
+    if (moveId == 0) response->print("{}");
+    else response->print(miniQuadMovesConfig[moveId].json);
   }
+  request->send(response);
 }
 
 void handleNotFound(AsyncWebServerRequest *request) {

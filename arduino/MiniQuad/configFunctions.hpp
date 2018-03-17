@@ -9,13 +9,13 @@ void initConfig() {
       miniQuadConfig.servoCenter[i] = 90;
       miniQuadConfig.servoRange[i] = 40;
   }
-  miniQuadConfig.speed = 50;
-  miniQuadConfig.moveSpeed = 50;
   miniQuadConfig.wiFiNeedSetup = true;
 }
 
 void loadConfig() {
   miniQuadConfig.wiFiNeedSetup = false;
+  miniQuadConfig.speed = 50;
+  miniQuadConfig.customSpeed = 50;
   Serial.print("Loading configuration -> ");
   File file = SPIFFS.open(CONFIG_FILE, "r");
   if (!file) {
@@ -24,19 +24,17 @@ void loadConfig() {
     return;
   }
   StaticJsonBuffer<1024> jsonBuffer;
-  JsonObject& jsonConfig = jsonBuffer.parseObject(file);
-  if (!jsonConfig.success()) {
+  JsonObject& configJson = jsonBuffer.parseObject(file);
+  if (!configJson.success()) {
     Serial.println("impossible to parse /config.json, using default configuration");
     initConfig();
   } else {
     Serial.println("using /config.json");
 #ifdef MINIQUAD_DEBUG    
-    jsonConfig.prettyPrintTo(Serial);
+    configJson.prettyPrintTo(Serial);
 #endif
-    strcpy(miniQuadConfig.hostName, jsonConfig["host"]);
-    miniQuadConfig.speed = jsonConfig["speed"];
-    miniQuadConfig.moveSpeed = jsonConfig["moveSpeed"];
-    JsonArray& servo = jsonConfig["servo"];
+    strcpy(miniQuadConfig.hostName, configJson["host"]);
+    JsonArray& servo = configJson["servo"];
     for (int i=0; i<NB_SERVOS; i++) {
       miniQuadConfig.servoCenter[i] = servo[i][1];
       miniQuadConfig.servoRange[i] = servo[i][2];
@@ -50,19 +48,17 @@ void loadConfig() {
 void saveConfig() {
   if (!miniQuadConfig.changed) return;
   StaticJsonBuffer<1024> jsonBuffer;
-  JsonObject& jsonConfig = jsonBuffer.createObject();
-  jsonConfig["host"] = miniQuadConfig.hostName;
-  jsonConfig["speed"] = miniQuadConfig.speed;
-  jsonConfig["moveSpeed"] = miniQuadConfig.moveSpeed;
-  JsonArray& servos = jsonConfig.createNestedArray("servo");
+  JsonObject& configJson = jsonBuffer.createObject();
+  configJson["host"] = miniQuadConfig.hostName;
+  JsonArray& servos = configJson.createNestedArray("servo");
   for (int i=0; i<NB_SERVOS; i++) {
     JsonArray& servo = servos.createNestedArray();
-    servo.add(MQServoNames[i].c_str());
+    servo.add(miniQuadServoNames[i].c_str());
     servo.add(miniQuadConfig.servoCenter[i]);
     servo.add(miniQuadConfig.servoRange[i]);
   }
   File file = SPIFFS.open(CONFIG_FILE, "w");
-  jsonConfig.printTo(file);
+  configJson.printTo(file);
   file.flush();
   file.close();
   miniQuadConfig.changed = false;

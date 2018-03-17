@@ -23,17 +23,17 @@
 						<table>	
 							<tr>
 								<td></td>
-								<td><a href="#forward" class="mq-button" id="m10" @click="onClickAction"><i class="icon f7-icons mq-icon">arrow_up</i></a></td>
+								<td><a href="#forward" class="mq-button" id="m10" @click="onClickMove"><i class="icon f7-icons mq-icon">arrow_up</i></a></td>
 								<td></td>
 							</tr>
 							<tr>
-								<td><a href="#left" class="mq-button" id="m13" @click="onClickAction"><i class="icon f7-icons mq-icon">arrow_left</i></a></td>
-								<td><a href="#stop" class="mq-button mq-active" id="stop" @click="onClickAction"><i class="icon f7-icons mq-icon">pause_fill</i></a></td>
-								<td><a href="#right" class="mq-button" id="m11" @click="onClickAction"><i class="icon f7-icons mq-icon">arrow_right</i></a></td>
+								<td><a href="#left" class="mq-button" id="m13" @click="onClickMove"><i class="icon f7-icons mq-icon">arrow_left</i></a></td>
+								<td><a href="#stop" class="mq-button mq-active" id="stop" @click="onClickMove"><i class="icon f7-icons mq-icon">pause_fill</i></a></td>
+								<td><a href="#right" class="mq-button" id="m11" @click="onClickMove"><i class="icon f7-icons mq-icon">arrow_right</i></a></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td><a href="#backward" class="mq-button" id="m12" @click="onClickAction"><i class="icon f7-icons mq-icon">arrow_down</i></a></td>
+								<td><a href="#backward" class="mq-button" id="m12" @click="onClickMove"><i class="icon f7-icons mq-icon">arrow_down</i></a></td>
 								<td></td>
 							</tr>
 						</table>
@@ -83,7 +83,7 @@
 return {
 	on: {
 		pageInit: function () {
-			sendWSCommand("action:speed:get");
+			sendWSCommand("action:speed:main:get");
 			sendWSCommand("battery:get");
 		},
 		
@@ -93,7 +93,7 @@ return {
 	},
 		
     methods: {
-		onClickAction: function(e) {
+		onClickMove: function(e) {
 			var $ = this.$;
 			var buttonId = $(e.target).parent().attr('id');
 			sendWSCommand("action:move:" + buttonId);
@@ -105,7 +105,7 @@ return {
 			var $ = this.$;
 			var app = this.$app;
 			var speed = app.range.getValue("#mq-speed");
-			sendWSCommand("action:speed:set:" + speed);
+			sendWSCommand("action:speed:main:set:" + speed);
 		},
 	}
 }

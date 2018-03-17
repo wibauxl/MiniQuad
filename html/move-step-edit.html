@@ -118,6 +118,14 @@ return {
 				}
 			});
 		}
+		
+        pageBeforeOut: function() {
+			var $ = this.$;
+			var moveId = $("#move-id").html();
+			var moveId = $("#move-step-mid").html();
+			var stepId = $("#move-step-sid").html();
+			sendWSCommand("config:move:" + moveId + ":" + stepId + ":save");
+		},	
 	},
 	
     methods: {

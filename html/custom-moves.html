@@ -10,7 +10,7 @@
 					<text class="mq-battery-text" font-weight="500" font-size="20" y="22" x="34" stroke-width="0" stroke="#000" fill="#000000"> 50%</text>
 				</svg>
 			</div>
-			<div class="title">MiniQuad - Moves</div>
+			<div class="title">MiniQuad - Custom moves</div>
 			<div class="right">
 				<a href="/moves-edit/" class="link">Edit</a>
 			</div>
@@ -22,19 +22,19 @@
 		<div class="row">
 			<table style="width: 100%; background: #fff">
 				<tr>
-					<td style="width: 32vw"><a href="#" class="mq-moves-button mq-hidden" id="m1" @click="onClickMove">User1</a></td>
-					<td style="width: 32vw"><a href="#" class="mq-moves-button mq-hidden" id="m2" @click="onClickMove">User2</a></td>
-					<td style="width: 32vw"><a href="#" class="mq-moves-button mq-hidden" id="m3" @click="onClickMove">User3</a></td>
+					<td style="width: 32vw"><a href="#" class="mq-custom-move-button mq-hidden" id="m1" @click="onClickCustomMove">Custom1</a></td>
+					<td style="width: 32vw"><a href="#" class="mq-custom-move-button mq-hidden" id="m2" @click="onClickCustomMove">Custom2</a></td>
+					<td style="width: 32vw"><a href="#" class="mq-custom-move-button mq-hidden" id="m3" @click="onClickCustomMove">Custom3</a></td>
 				</tr>
 				<tr>
-					<td><a href="#" class="mq-moves-button mq-hidden" id="m4" @click="onClickMove">User4</a></td>
-					<td><a href="#" class="mq-moves-button mq-active" id="stop-move" @click="onClickMove"><i class="icon f7-icons mq-icon">pause_fill</i></a></td>
-					<td><a href="#" class="mq-moves-button mq-hidden" id="m5" @click="onClickMove">User6</a></td>
+					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m4" @click="onClickCustomMove">Custom4</a></td>
+					<td><a href="#" class="mq-custom-move-button mq-active" id="stop-move" @click="onClickCustomMove"><i class="icon f7-icons mq-icon">pause_fill</i></a></td>
+					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m5" @click="onClickCustomMove">Custom6</a></td>
 				</tr>
 				<tr>
-					<td><a href="#" class="mq-moves-button mq-hidden" id="m6" @click="onClickMove">User6</a></td>
-					<td><a href="#" class="mq-moves-button mq-hidden" id="m7" @click="onClickMove">User7</a></td>
-					<td><a href="#" class="mq-moves-button mq-hidden" id="m8" @click="onClickMove">User8</a></td>
+					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m6" @click="onClickCustomMove">User6</a></td>
+					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m7" @click="onClickCustomMove">User7</a></td>
+					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m8" @click="onClickCustomMove">User8</a></td>
 				</tr>
 			</table>
 		</div>
@@ -48,7 +48,7 @@
 						<i class="icon material-icons md-only">remove</i>
 					</div>
 					<div class="item-cell flex-shrink-3">
-						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeMoveSpeed" id="mq-moves-speed"
+						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeCustomSpeed" id="mq-custom-move-speed"
 							data-min="0" data-max="100" data-step="1" data-value="50"></div>
 					</div>
 					<div class="item-cell width-auto flex-shrink-0">
@@ -79,7 +79,7 @@
 return {	
 	on: {
 		pageInit: function () {
-			sendWSCommand("action:moveSpeed:get");
+			sendWSCommand("action:speed:custom:get");
 			sendWSCommand("battery:get");
 			app.request.json('moves.json', function (data) {
 				// moves.json contains all moves including forward, backward, left and right
@@ -96,20 +96,20 @@ return {
 	},
 	
 	methods: {
-		onClickMove: function(e) {
+		onClickCustomMove: function(e) {
 			var $ = this.$;
 			var buttonId = $(e.target).parent().attr('id');
 			if (buttonId == null) buttonId = $(e.target).attr('id');
 			sendWSCommand("action:move:" + buttonId);
-			$('.mq-moves-button').removeClass('mq-active');
+			$('.mq-custom-move-button').removeClass('mq-active');
 			$("#" + buttonId).addClass('mq-active');
 		},
 
-		onChangeMoveSpeed: function (e, range) {
+		onChangeCustomSpeed: function (e, range) {
 			var $ = this.$;
 			var app = this.$app;
-			var moveSpeed = app.range.getValue('#mq-moves-speed');
-			sendWSCommand("action:moveSpeed:set:" + moveSpeed);
+			var customSpeed = app.range.getValue('#mq-custom-move-speed');
+			sendWSCommand("action:speed:custom:set:" + customSpeed);
 		},
 	}
 }
