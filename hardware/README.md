@@ -8,5 +8,4 @@
 
 ## Wiring
 ![FeatherProto](https://github.com/wibauxl/MiniQuad/tree/master/hardware/FeatherProto.jpg)
-![FeatherProto](https://github.com/wibauxl/MiniQuad/tree/master/hardware/FeatherProto.png)
-![FeatherProto](https://github.com/wibauxl/MiniQuad/tree/master/hardware/FeatherProto.svg)
+You can click on the svg to get an image with a better definition.
