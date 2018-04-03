@@ -7,5 +7,5 @@
 - 8 x [Microservo TowerPro SG92](https://www.adafruit.com/product/169)
 
 ## Wiring
-![FeatherProto](https://raw.githubusercontent.com/wibauxl/MiniQuad/tree/master/hardware/FeatherProto.svg)
+![FeatherProto](https://raw.githubusercontent.com/wibauxl/MiniQuad/master/hardware/FeatherProto.png)
 You can click on the svg to get an image with a better definition.
