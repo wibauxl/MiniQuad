@@ -4,17 +4,61 @@
 		<div class="navbar-inner sliding">
 			<div class="title">MiniQuad - Edit moves</div>
 			<div class="right">
-				<a href="/moves/" class="link">Done</a>
+				<a href="/custom-moves/" class="link">Done</a>
 			</div>
 		</div>
 	</div>
 	<div class="page-content">
-		<div class="list links-list" id="moves-list"></div>
-		<div class="list" id="moves-list-actions">
-			<ul>
-				<li><a href="/move-import/" class="list-button item-link mq-list-button">Import move</a></li>
-			</ul>
-		</div>
+		<div class="block-title">Custom moves</div>
+		<div class="row">
+			<table style="width: 100%; background: #fff">
+				<tr>
+					<td style="width: 32vw"><a href="#" class="mq-custom-move-button" id="me1" @click="onClickMoveEdit('me1')"><i>Move-1</i></a></td>
+					<td style="width: 32vw"><a href="#" class="mq-custom-move-button" id="me2" @click="onClickMoveEdit('me2')"><i>Move-2</i></a></td>
+					<td style="width: 32vw"><a href="#" class="mq-custom-move-button" id="me3" @click="onClickMoveEdit('me3')"><i>Move-3</i></a></td>
+				</tr>
+				<tr>
+					<td><a href="#" class="mq-custom-move-button" id="me4" @click="onClickMoveEdit('me4')"><i>Move-4</i></a></td>
+					<td></td>
+					<td><a href="#" class="mq-custom-move-button" id="me5" @click="onClickMoveEdit('me5')"><i>Move-5</i></a></td>
+				</tr>
+				<tr>
+					<td><a href="#" class="mq-custom-move-button" id="me6" @click="onClickMoveEdit('me6')"><i>Move-6</i></a></td>
+					<td><a href="#" class="mq-custom-move-button" id="me7" @click="onClickMoveEdit('me7')"><i>Move-7</i></a></td>
+					<td><a href="#" class="mq-custom-move-button" id="me8" @click="onClickMoveEdit('me8')"><i>Move-8</i></a></td>
+				</tr>
+			</table>
+		</div>	
+		<div class="block-title">Base moves</div>
+		<div class="row">
+			<table style="width: 100%; background: #fff">
+				<tr>
+					<td></td>
+					<td style="width: 75vw">
+						<table>	
+							<tr>
+								<td></td>
+								<td><a href="#forward" class="mq-button" id="me10" @click="onClickMoveEdit('me10')"><i class="icon f7-icons mq-icon">arrow_up</i></a></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><a href="#left" class="mq-button" id="me13" @click="onClickMoveEdit('me13')"><i class="icon f7-icons mq-icon">arrow_left</i></a></td>
+								<td></td>
+								<td><a href="#right" class="mq-button" id="me11" @click="onClickMoveEdit('me11')"><i class="icon f7-icons mq-icon">arrow_right</i></a></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><a href="#backward" class="mq-button" id="me12" @click="onClickEditMove('me12')"><i class="icon f7-icons mq-icon">arrow_down</i></a></td>
+								<td></td>
+							</tr>
+						</table>
+					</td>
+					<td></td>
+				</tr>
+			</table>
+		</div>		
+		<div class="block-title"></div>
+		<div class="block-title"></div>
 	</div>
 	<div class="toolbar tabbar toolbar-bottom-md">
 		<div class="toolbar-inner sliding">
@@ -36,27 +80,31 @@ return {
 	on: {
 		pageInit: function(e, page) {
 			app.request.json('moves.json', function (data) {
-				var movesList = "<ul>";
-				// maximum 8 user moves, from 1 to 8
+				// maximum 8 custom moves, from 1 to 8
 				for (var um=1; um<=8; um++) {
 					var id = -1;
 					for (var i=0; i<data.length-4; i++) {
 						if (data[i].id == um) {
 							id = um;
-							movesList += "<li><a href='/move-steps/?m=" + data[i].id + "'>" + data[i].n + "</a></li>";
+							$("#me" + um).html(data[i].n);
 							break;
 						}
 					}
-					if (id == -1) movesList += "<li><a href='/move-steps/?m=" + um + "&cm=t'><i style='color: grey'>Create user move " + um + "</i></a></li>";
+					if (id == -1) {
+						$("#me" + um).addClass("mq-button-unused");
+					}
 				}
-				// list the default moves
-				for (var i=data.length-4; i<data.length; i++) 
-					movesList += "<li><a href='/move-steps/?m=" + data[i].id + "'>" + data[i].n + "</a></li>";
-				movesList += "</ul>";
-				$('#moves-list').html(movesList);
-				if (data.length == (8+4)) $('#moves-list-actions').css('display', 'none');
 			});
-		},
+		}
+	},
+	
+	methods: {
+		onClickMoveEdit: function(buttonId) {
+			var $ = this.$;
+			// use the mq-button-unused class to define if the move needs to be created
+			var isUnused = $("#" + buttonId).hasClass("mq-button-unused");
+			this.$router.navigate("/move-steps/?m=" + buttonId.substring(2) + (isUnused ? "&cm=t" : ""));
+		}
 	}
 }
 </script>

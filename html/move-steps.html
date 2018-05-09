@@ -24,9 +24,10 @@
 		</div>
 		<div class="block-title">Steps</div>
 		<div class="list links-list" id="move-steps-list"></div>
-		<div class="list" id="move-actions">
+		<div class="list">
 			<ul>
-				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickAction('duplicate')">Duplicate</a></li>
+				<li id="move-import"><a href="#" class="list-button item-link mq-list-button" @click="onClickAction('import')">Import</a></li>
+				<li id="move-duplicate"><a href="#" class="list-button item-link mq-list-button" @click="onClickAction('duplicate')">Duplicate</a></li>
 				<li id="move-delete"><a href="#" class="list-button item-link mq-list-button" style="color: red" @click="onClickAction('delete')">Delete</a></li>
 			</ul>
 		</div>
@@ -53,15 +54,17 @@ return {
 			var query = page.route.query;
 			var $ = this.$;
 			var app = this.$app;
-			moveId = query.m;
+			var moveId = query.m;
 			$("#move-id").html(moveId);
 			if (query.cm != undefined) {
 				$('#move-name').val("Move-" + moveId);
 				var stepsList = "<ul><li><a href='/move-step-edit/?m=" + moveId + "&s=0'><i style='color: grey'>Create step</i></a></li></ul>";
 				$("#move-steps-list").html(stepsList);
-				$('#move-actions').css('display', 'none');
+				$('#move-delete').css('display', 'none');
+				$('#move-duplicate').css('display', 'none');
 			} else {
 				app.request.json("m" + moveId + ".json", function (data) {
+					$('#move-import').css('display', 'none');
 					$('#move-name').val(data.name);
 					if (parseInt(moveId) >= 10) {
 						$('#move-name').attr('readonly','readonly');
@@ -117,14 +120,18 @@ return {
 		},	
 	},
 	
-	    methods: {
+	methods: {
 		onClickAction: function(actionToDo) {
 			var $ = this.$;
 			var app = this.$app;
 			var moveId = $("#move-id").html();
-			sendWSCommand("config:move:" + moveId + ":" + actionToDo);
 			var router = this.$router;
-			router.navigate('/moves-edit/');
+			if (actionToDo === 'import') {
+				router.navigate("/move-import/?m=" + moveId);
+			} else {
+				sendWSCommand("config:move:" + moveId + ":" + actionToDo);
+				router.navigate('/moves-edit/');
+			}
 		}
 	}
 }

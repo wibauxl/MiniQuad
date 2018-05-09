@@ -11,8 +11,8 @@ var routes = [
     },
   },
   {
-    path: '/moves/',
-    componentUrl: './moves.html',
+    path: '/custom-moves/',
+    componentUrl: './custom-moves.html',
 	options: {
         animate: false,
     },

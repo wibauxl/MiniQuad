@@ -117,7 +117,7 @@ return {
 					$('#move-step-delete').css('display', 'none');
 				}
 			});
-		}
+		},
 		
         pageBeforeOut: function() {
 			var $ = this.$;
@@ -136,7 +136,7 @@ return {
 			var stepId = $("#move-step-sid").html();
 			sendWSCommand("config:move:" + moveId + ":" + stepId + ":" + actionToDo);
 			var router = this.$router;
-			router.navigate("/moves-steps/?m=" + moveId);
+			router.navigate("/move-steps/?m=" + moveId);
 		},
 		
 		onClickMoveStepSlider: function(sliderId, value) {

@@ -30,6 +30,11 @@ a.mq-custom-move-button {
 	font-weight: 600;
 }
 
+a.mq-button-unused {
+	color: #777;
+	border: 1px solid #777;
+}
+
 .mq-hidden {
 	display: none !important;
 }
@@ -103,6 +108,11 @@ a.mq-custom-move-button {
 .mq-step-front {
 	width: 18%;
 	font-size: 12px;
+}
+
+.mq-json-import {
+	font-size: 12px !important;
+	height: 50vh !important;
 }
 
 @font-face {
