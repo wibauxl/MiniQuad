@@ -16,7 +16,7 @@ a.mq-button {
 	display: block;
 }
 
-a.mq-moves-button {
+a.mq-custom-move-button {
 	width: 28vw;
 	margin: 1vw;
 	height: 60px;
@@ -30,10 +30,15 @@ a.mq-moves-button {
 	font-weight: 600;
 }
 
+a.mq-button-unused {
+	color: #777;
+	border: 1px solid #777;
+}
+
 .mq-hidden {
 	display: none !important;
 }
-	
+
 .mq-active {
   background: rgba(128, 128, 128, 0.5);
 }
@@ -58,6 +63,56 @@ a.mq-moves-button {
 .mq-list-button {
 	width: 90vw;
 	text-align: left !important;
+}
+
+.mq-list-button:after {
+	height: 2px !important;;
+}
+
+.mq-step a {
+	height: 68px !important;
+}
+
+.mq-step table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.mq-step td {
+	text-align: center;
+	vertical-align: middle;
+}
+
+.mq-step-hip {
+	text-align: center;
+	border-top: black 1px solid;
+	width: 21%;
+	font-size: 13px;
+}
+
+.mq-step-leg {
+	text-align: center;
+/*	border-top: black 1px solid; */
+	width: 21%;
+	font-size: 13px;
+}
+
+.mq-step-right {
+	border-left: black 1px solid;
+}
+
+.mq-step-left {
+	border-right: black 1px solid;
+}
+
+.mq-step-front {
+	width: 18%;
+	font-size: 12px;
+}
+
+.mq-json-import {
+	font-size: 12px !important;
+	height: 50vh !important;
 }
 
 @font-face {
@@ -120,6 +175,10 @@ a.mq-moves-button {
   -moz-font-feature-settings: "liga";
   font-feature-settings: "liga";
   text-align: center;
+}
+
+.links-list a:after {
+  height: 2px !important;
 }
 
 .list-block-label {

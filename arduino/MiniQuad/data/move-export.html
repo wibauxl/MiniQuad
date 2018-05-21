@@ -2,24 +2,18 @@
 <div class="page">
 	<div class="navbar">
 		<div class="navbar-inner sliding">
-			<div class="title">MiniQuad - Edit Move</div>
+			<div class="title">MiniQuad - Export move</div>
 			<div class="right">
-				<a href="/moves/" class="link">Done</a>
+				<a href="/moves-edit/" class="link">Done</a>
 			</div>
 		</div>
 	</div>
 	<div class="page-content">
+		<div class="block-title">Move json</div>
 		<div class="list">
 			<ul>
-				<li>
-					<div class="item-content">
-						<div class="item-inner">
-							<div class="item-title label">Name</div>
-							<div class="item-input">
-								<input type="text" placeholder="Move name" id="move-name" value="">
-							</div>
-						</div>
-					</div>
+				<li class="item-content item-input item-input-wrap">
+					<textarea class="resizable mq-json-import" id="mq-json-export"></textarea>
 				</li>
 			</ul>
 		</div>
@@ -42,14 +36,15 @@
 <script>
 return {
 	on: {
-		pageInit: function(e, page) {
+		pageBeforeIn: function(e, page) {
 			var query = page.route.query;
 			var $ = this.$;
 			var app = this.$app;
-			if (query.m === 'New') {
-				// do nothing
-			} else $("#move-name").val(query.m);
-		},
-	}
+			var moveId = query.m;
+			app.request.get("m" + moveId + ".json", function (data) {
+				$("#mq-json-export").html(data);
+			});
+		}
+	},
 }
 </script>

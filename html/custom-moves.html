@@ -22,19 +22,19 @@
 		<div class="row">
 			<table style="width: 100%; background: #fff">
 				<tr>
-					<td style="width: 32vw"><a href="#" class="mq-custom-move-button mq-hidden" id="m1" @click="onClickCustomMove('m1')">Custom1</a></td>
-					<td style="width: 32vw"><a href="#" class="mq-custom-move-button mq-hidden" id="m2" @click="onClickCustomMove('m2')">Custom2</a></td>
-					<td style="width: 32vw"><a href="#" class="mq-custom-move-button mq-hidden" id="m3" @click="onClickCustomMove('m3')">Custom3</a></td>
+					<td style="width: 32vw"><a href="#" class="mq-custom-move-button mq-hidden" id="m1" @click="onClickCustomMove('1')">Custom1</a></td>
+					<td style="width: 32vw"><a href="#" class="mq-custom-move-button mq-hidden" id="m2" @click="onClickCustomMove('2')">Custom2</a></td>
+					<td style="width: 32vw"><a href="#" class="mq-custom-move-button mq-hidden" id="m3" @click="onClickCustomMove('3')">Custom3</a></td>
 				</tr>
 				<tr>
-					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m4" @click="onClickCustomMove('m4')">Custom4</a></td>
+					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m4" @click="onClickCustomMove('4')">Custom4</a></td>
 					<td><a href="#" class="mq-custom-move-button mq-active" id="stop-move" @click="onClickCustomMove('stop')"><i class="icon f7-icons mq-icon">pause_fill</i></a></td>
-					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m5" @click="onClickCustomMove('m5')">Custom6</a></td>
+					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m5" @click="onClickCustomMove('5')">Custom6</a></td>
 				</tr>
 				<tr>
-					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m6" @click="onClickCustomMove('m6')">User6</a></td>
-					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m7" @click="onClickCustomMove('m7')">User7</a></td>
-					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m8" @click="onClickCustomMove('m8')">User8</a></td>
+					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m6" @click="onClickCustomMove('6')">Custom6</a></td>
+					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m7" @click="onClickCustomMove('7')">Custom7</a></td>
+					<td><a href="#" class="mq-custom-move-button mq-hidden" id="m8" @click="onClickCustomMove('8')">Custom8</a></td>
 				</tr>
 			</table>
 		</div>
@@ -58,7 +58,7 @@
 				</li>
 			</ul>
 		</div>
-		
+
 	</div>
 	<div class="toolbar tabbar toolbar-bottom-md">
 		<div class="toolbar-inner sliding">
@@ -76,7 +76,7 @@
 </div>
 </template>
 <script>
-return {	
+return {
 	on: {
 		pageInit: function () {
 			sendWSCommand("action:speed:custom:get");
@@ -89,18 +89,19 @@ return {
 				}
 			});
 		},
-		
-        pageAfterOut: function() {
+
+    pageAfterOut: function() {
 			sendWSCommand("action:move:stop");
 		},
 	},
-	
+
 	methods: {
-		onClickCustomMove: function(buttonId) {
+		onClickCustomMove: function(actionName) {
 			var $ = this.$;
-			sendWSCommand("action:move:" + buttonId);
+			sendWSCommand("action:move:" + actionName);
 			$('.mq-custom-move-button').removeClass('mq-active');
-			$("#" + buttonId).addClass('mq-active');
+			if (actionName == 'stop') $("#stop-move").addClass('mq-active');
+			else $("#m" + actionName).addClass('mq-active');
 		},
 
 		onChangeCustomSpeed: function (e, range) {

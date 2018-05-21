@@ -26,6 +26,7 @@
 		<div class="list links-list" id="move-steps-list"></div>
 		<div class="list">
 			<ul>
+				<li id="move-export"><a href="#" class="list-button item-link mq-list-button" @click="onClickAction('export')">Export</a></li>
 				<li id="move-import"><a href="#" class="list-button item-link mq-list-button" @click="onClickAction('import')">Import</a></li>
 				<li id="move-duplicate"><a href="#" class="list-button item-link mq-list-button" @click="onClickAction('duplicate')">Duplicate</a></li>
 				<li id="move-delete"><a href="#" class="list-button item-link mq-list-button" style="color: red" @click="onClickAction('delete')">Delete</a></li>
@@ -57,13 +58,15 @@ return {
 			var moveId = query.m;
 			$("#move-id").html(moveId);
 			if (query.cm != undefined) {
+				// create move
 				$('#move-name').val("Move-" + moveId);
 				var stepsList = "<ul><li><a href='/move-step-edit/?m=" + moveId + "&s=0'><i style='color: grey'>Create step</i></a></li></ul>";
 				$("#move-steps-list").html(stepsList);
+				$('#move-export').css('display', 'none');
 				$('#move-delete').css('display', 'none');
 				$('#move-duplicate').css('display', 'none');
 			} else {
-				app.request.json("m" + moveId + ".json", function (data) {
+				app.request.json("m" + moveId + ".json", function success(data) {
 					$('#move-import').css('display', 'none');
 					$('#move-name').val(data.name);
 					if (parseInt(moveId) >= 10) {
@@ -85,7 +88,7 @@ return {
 													"<td class='mq-step-hip mq-step-front'>" + data.steps[i][2] + "</td>" +
 													"<td class='mq-step-leg mq-step-right mq-step-front'>" + data.steps[i][3] + "</td>" +
 													"<td style='width: 11%'></td>" +
-												"</tr>" + 
+												"</tr>" +
 												"<tr style='height: 6px'><td colspan='7'/></tr>" +
 												"</table>" +
 												"<table><tr>" +
@@ -96,30 +99,36 @@ return {
 													"<td class='mq-step-hip'>" + data.steps[i][6] + "</td>" +
 													"<td class='mq-step-leg mq-step-right'>" + data.steps[i][7] + "</td>" +
 													"<td style='width: 3%'></td>" +
-												"</tr></table>" + 
+												"</tr></table>" +
 											"</td>" +
 											"<td class='mq-step' style='width: 20%'>" + data.steps[i][8] + "</td>" +
 										"</tr>" +
 									"</table>" +
 								"</a></li>";
 					}
-					if (data.steps.length < 30) 
+					if (data.steps.length < 30)
 						stepsList += "<li><a href='/move-step-edit/?m=" + moveId + "&s=" + data.steps.length + "'><i style='color: grey'>Create step</i></a></li>";
 					stepsList += "</ul>";
 					$("#move-steps-list").html(stepsList);
+				}, function error() {
+					$('#move-name').val("Move-" + moveId);
+					var stepsList = "<ul><li><a href='/move-step-edit/?m=" + moveId + "&s=0'><i style='color: grey'>Create step</i></a></li></ul>";
+					$("#move-steps-list").html(stepsList);
+					$('#move-delete').css('display', 'none');
+					$('#move-duplicate').css('display', 'none');
 				});
-			}	
+			}
 		},
-		
-        pageBeforeOut: function() {
+
+    pageBeforeOut: function() {
 			var $ = this.$;
 			var moveId = $("#move-id").html();
 			var moveName = $("#move-name").val();
 			if (moveName === '') moveName = "Move-" + moveId;
 			sendWSCommand("config:move:" + moveId + ":save:" + moveName);
-		},	
+		},
 	},
-	
+
 	methods: {
 		onClickAction: function(actionToDo) {
 			var $ = this.$;
@@ -128,6 +137,8 @@ return {
 			var router = this.$router;
 			if (actionToDo === 'import') {
 				router.navigate("/move-import/?m=" + moveId);
+			} else	if (actionToDo === 'export') {
+				router.navigate("/move-export/?m=" + moveId);
 			} else {
 				sendWSCommand("config:move:" + moveId + ":" + actionToDo);
 				router.navigate('/moves-edit/');

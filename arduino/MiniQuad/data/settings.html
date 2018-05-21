@@ -7,31 +7,31 @@
 	</div>
 	<div id="settings" class="page-content">
 		<div class="block-title">Servo actions</div>
-		<div class="list simple-list">
+		<div class="list">
 			<ul>
 				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('center')">Center all</a></li>
-				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('hips-range')">Test hips range</a></li>
-				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('legs-range')">Test legs range</a></li>
+				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('range:hips')">Test hips range</a></li>
+				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickTest('range:legs')">Test legs range</a></li>
 			</ul>
 		</div>
 		<div class="block-title">Servo centers</div>
 		<div class="list simple-list">
 			<ul>
-				{{#each servo}}
+				{{#each servoNames}}
 				<li class="item-row">
 					<div class="item-cell flex-shrink-0 mq-servo-label">{{this}}</div>
 					<div class="item-cell width-auto flex-shrink-0">
-						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-center', -1)">
+						<a href="#" class="link icon-only" @click="onClickServoSlider('mq-servo-setting-center-{{@index}}', -1)">
 							<i class="icon f7-icons ios-only mq-servo-icon">delete_round</i>
 							<i class="icon material-icons md-only mq-servo-icon">remove</i>
 						</a>
 					</div>
 					<div class="item-cell flex-shrink-3">
-						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeServo" id="{{this}}-center"
+						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeServoSlider" id="mq-servo-setting-center-{{@index}}"
 							data-min="70" data-max="110" data-step="1" data-value="90"></div>
 					</div>
 					<div class="item-cell width-auto flex-shrink-0">
-						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-center', 1)">
+						<a href="#" class="link icon-only" @click="onClickServoSlider('mq-servo-setting-center-{{@index}}', 1)">
 							<i class="icon f7-icons ios-only mq-servo-icon">add_round</i>
 							<i class="icon material-icons md-only mq-servo-icon">add</i>
 						</a>
@@ -44,21 +44,21 @@
 		<div class="block-title">Servo ranges</div>
 		<div class="list simple-list">
 			<ul>
-				{{#each servo}}
+				{{#each servoNames}}
 				<li class="item-row">
 					<div class="item-cell flex-shrink-0 mq-servo-label">{{this}}</div>
 					<div class="item-cell width-auto flex-shrink-0">
-						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-range', -1)">
+						<a href="#" class="link icon-only" @click="onClickServoSlider('mq-servo-setting-range-{{@index}}', -1)">
 							<i class="icon f7-icons ios-only mq-servo-icon">delete_round</i>
 							<i class="icon material-icons md-only mq-servo-icon">remove</i>
 						</a>
 					</div>
 					<div class="item-cell flex-shrink-3">
-						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeServo" id="{{this}}-range"
+						<div class="range-slider range-slider-init" data-label="true" @range:change="onChangeServoSlider" id="mq-servo-setting-range-{{@index}}"
 							data-min="0" data-max="60" data-step="1" data-value="40"></div>
 					</div>
 					<div class="item-cell width-auto flex-shrink-0">
-						<a href="#" class="link icon-only" @click="onClickServo('{{this}}-range', 1)">
+						<a href="#" class="link icon-only" @click="onClickServoSlider('mq-servo-setting-range-{{@index}}', 1)">
 							<i class="icon f7-icons ios-only mq-servo-icon">add_round</i>
 							<i class="icon material-icons md-only mq-servo-icon">add</i>
 						</a>
@@ -71,14 +71,14 @@
 		<div class="block" style="text-align: center">
 			<img src="MiniQuad.svg" style="width:80%"/>
 		</div>
-	
+
 	</div>
 	<div class="toolbar tabbar toolbar-bottom-md">
 		<div class="toolbar-inner sliding">
 			<a href="/home/" class="tab-link">
 				<i class="icon f7-icons">paper_plane</i>
 			</a>
-			<a href="/moves/" class="tab-link">
+			<a href="/custom-moves/" class="tab-link">
 				<i class="icon f7-icons">data</i>
 			</a>
 			<a href="#settings" class="tab-link  tab-link-active">
@@ -91,50 +91,41 @@
 <script>
 return {
 	data: function () {
-		return {
-			"servo":['FLH', 'FRH', 'BRH', 'BLH', 'FLL', 'FRL', 'BRL', 'BLL']
-		}
+		return getMiniquadConfig();
 	},
 
 	on: {
-		pageInit: function () {
-			var self = this;
-			var app = self.$app;
-            app.request({
-				url: 'config.json',
-				method: 'GET',
-				dataType: 'json',
-				success: function success(data) {
-					var servo = data["servo"];
-					for (var i=0; i<servo.length; i++) {
-						app.range.setValue("#" + servo[i][0] + "-center", servo[i][1]);
-						app.range.setValue("#" + servo[i][0] + "-range", servo[i][2]);
-					}
-				},
-            });
+		pageBeforeIn: function () {
+			var app = this.$app;
+			miniquadConfig = getMiniquadConfig();
+			for (var i=0; i<miniquadConfig.servoCenters.length; i++) {
+				app.range.setValue("#mq-servo-setting-center-" + i, miniquadConfig.servoCenters[i]);
+				app.range.setValue("#mq-servo-setting-range-" + i, miniquadConfig.servoRanges[i]);
+			}
 		},
-        pageAfterOut: function() {
-			sendWSCommand("config:save");
+
+    pageAfterOut: function() {
+			sendWSCommand("config:calibration:save");
 		},
 	},
-		
-    methods: {
-		onClickTest: function(actionToDo) {
+
+  methods: {
+	  onClickTest: function(actionToDo) {
 			sendWSCommand("action:test:" + actionToDo);
 		},
-		
-		onClickServo: function(sliderId, value) {
+
+		onClickServoSlider: function(sliderId, value) {
 			var app = this.$app;
 			var sliderValue = app.range.getValue("#" + sliderId);
 			app.range.setValue("#" + sliderId, sliderValue + value);
 		},
-		
-		onChangeServo: function (e, range) {
+
+		onChangeServoSlider: function (e, range) {
 			var $ = this.$;
 			var app = this.$app;
 			var sliderId = $(e.target).attr('id');
 			var sliderValue = app.range.getValue("#" + sliderId);
-			sendWSCommand("servo:" + sliderId.replace('-', ':') + ":" + sliderValue);
+			sendWSCommand("config:calibrate:" + sliderId.substring(17).replace('-', ':') + ":" + sliderValue);
 		},
 	}
 }

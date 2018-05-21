@@ -4,32 +4,31 @@
 		<div class="navbar-inner sliding">
 			<div class="title">MiniQuad - Edit Move</div>
 			<div class="right">
-				<a href="/edit-moves/" class="link">Done</a>
+				<a href="/moves-edit/" class="link">Done</a>
 			</div>
 		</div>
 	</div>
 	<div class="page-content">
-		<div class="block-title" id="move-id"></div>
+		<div class="block-title">Name</div>
 		<div class="list">
 			<ul>
 				<li>
-					<div class="item-content">
-						<div class="item-inner">
-							<div class="item-title label">Name</div>
-							<div class="item-input">
-								<input type="text" placeholder="Move name" id="move-name" value="">
-							</div>
+					<div class="item-content item-inner">
+						<div class="item-input">
+							<input type="text" placeholder="Move name" id="move-name" value="" maxlength="7"/>
+							<span style="display: none" id="move-id"></span>
 						</div>
 					</div>
 				</li>
 			</ul>
 		</div>
 		<div class="block-title">Steps</div>
-		<div class="list links-list">
+		<div class="list links-list" id="move-steps-list"></div>
+		<div class="list">
 			<ul>
-				{{#each step}}
-				<li><a href="/move-step/?s={{@index}}">{{this}}</a></li>
-				{{/each}}
+				<li id="move-import"><a href="#" class="list-button item-link mq-list-button" @click="onClickAction('import')">Import</a></li>
+				<li id="move-duplicate"><a href="#" class="list-button item-link mq-list-button" @click="onClickAction('duplicate')">Duplicate</a></li>
+				<li id="move-delete"><a href="#" class="list-button item-link mq-list-button" style="color: red" @click="onClickAction('delete')">Delete</a></li>
 			</ul>
 		</div>
 	</div>
@@ -50,27 +49,96 @@
 </template>
 <script>
 return {
-	data: function () {
-		return {
-			"step":['-100 100 100 -100 100 -100 100 100 200', '-100 -100 -100 -100 -100 -100 -100 -100 200']
-		}
-	},
-
-    methods: {
-      openAlert: function(m) {
-        var self = this.$app.dialog.alert('Hello world!');
-      },
-    },
-
 	on: {
 		pageInit: function(e, page) {
 			var query = page.route.query;
 			var $ = this.$;
 			var app = this.$app;
-			if (query.m != undefined) app.mqmove = (parseInt(query.m) + 1);
-			$("#move-id").html("User move " + app.mqmove);
-			$("#move-name").val("Unused " + app.mqmove);
+			var moveId = query.m;
+			$("#move-id").html(moveId);
+			if (query.cm != undefined) {
+				$('#move-name').val("Move-" + moveId);
+				var stepsList = "<ul><li><a href='/move-step-edit/?m=" + moveId + "&s=0'><i style='color: grey'>Create step</i></a></li></ul>";
+				$("#move-steps-list").html(stepsList);
+				$('#move-delete').css('display', 'none');
+				$('#move-duplicate').css('display', 'none');
+			} else {
+				app.request.json("m" + moveId + ".json", function success(data) {
+					$('#move-import').css('display', 'none');
+					$('#move-name').val(data.name);
+					if (parseInt(moveId) >= 10) {
+						$('#move-name').attr('readonly','readonly');
+						$('#move-name').css('color', 'grey');
+						$('#move-delete').css('display', 'none');
+					}
+					var stepsList = "<ul>";
+					for (var i=0; i<data.steps.length; i++) {
+					    stepsList += "<li class='mq-step'><a href='/move-step-edit/?m=" + moveId + "&s=" + i + "' class='item-link item-content mq-step'>" +
+									"<table class='mq-step'>" +
+										"<tr>" +
+											"<td class='mq-step'>" +
+												"<table><tr>" +
+													"<td style='width: 11%'/>" +
+													"<td class='mq-step-leg mq-step-left mq-step-front'>" + data.steps[i][0] + "</td>" +
+													"<td class='mq-step-hip mq-step-front'>" + data.steps[i][1] + "</td>" +
+													"<td style='width: 6%'/>" +
+													"<td class='mq-step-hip mq-step-front'>" + data.steps[i][2] + "</td>" +
+													"<td class='mq-step-leg mq-step-right mq-step-front'>" + data.steps[i][3] + "</td>" +
+													"<td style='width: 11%'></td>" +
+												"</tr>" +
+												"<tr style='height: 6px'><td colspan='7'/></tr>" +
+												"</table>" +
+												"<table><tr>" +
+													"<td style='width: 3%'/>" +
+													"<td class='mq-step-leg mq-step-left'>" + data.steps[i][4] + "</td>" +
+													"<td class='mq-step-hip'>" + data.steps[i][5] + "</td>" +
+													"<td style='width: 10%'/>" +
+													"<td class='mq-step-hip'>" + data.steps[i][6] + "</td>" +
+													"<td class='mq-step-leg mq-step-right'>" + data.steps[i][7] + "</td>" +
+													"<td style='width: 3%'></td>" +
+												"</tr></table>" +
+											"</td>" +
+											"<td class='mq-step' style='width: 20%'>" + data.steps[i][8] + "</td>" +
+										"</tr>" +
+									"</table>" +
+								"</a></li>";
+					}
+					if (data.steps.length < 30)
+						stepsList += "<li><a href='/move-step-edit/?m=" + moveId + "&s=" + data.steps.length + "'><i style='color: grey'>Create step</i></a></li>";
+					stepsList += "</ul>";
+					$("#move-steps-list").html(stepsList);
+				}, function error() {
+					$('#move-name').val("Move-" + moveId);
+					var stepsList = "<ul><li><a href='/move-step-edit/?m=" + moveId + "&s=0'><i style='color: grey'>Create step</i></a></li></ul>";
+					$("#move-steps-list").html(stepsList);
+					$('#move-delete').css('display', 'none');
+					$('#move-duplicate').css('display', 'none');
+				});
+			}
 		},
+
+    pageBeforeOut: function() {
+			var $ = this.$;
+			var moveId = $("#move-id").html();
+			var moveName = $("#move-name").val();
+			if (moveName === '') moveName = "Move-" + moveId;
+			sendWSCommand("config:move:" + moveId + ":save:" + moveName);
+		},
+	},
+
+	methods: {
+		onClickAction: function(actionToDo) {
+			var $ = this.$;
+			var app = this.$app;
+			var moveId = $("#move-id").html();
+			var router = this.$router;
+			if (actionToDo === 'import') {
+				router.navigate("/move-import/?m=" + moveId);
+			} else {
+				sendWSCommand("config:move:" + moveId + ":" + actionToDo);
+				router.navigate('/moves-edit/');
+			}
+		}
 	}
 }
 </script>

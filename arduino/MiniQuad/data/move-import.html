@@ -1,0 +1,99 @@
+<template>
+<div class="page">
+	<div class="navbar">
+		<div class="navbar-inner sliding">
+			<div class="title">MiniQuad - Import move</div>
+			<div class="right">
+				<a href="/moves-edit/" class="link">Done</a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="block-title">Move json</div>
+		<div class="list">
+			<ul>
+				<li class="item-content item-input item-input-wrap">
+					<textarea class="resizable mq-json-import" id="mq-json-import" placeholder='{
+	"name" : "Salute",
+	"steps" : [
+		[0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[-100, -100, -100, -100, 0, 0, 0, 0, 20]
+	]
+}'></textarea>
+				</li>
+			</ul>
+		</div>
+		<div class="list">
+			<ul>
+				<li><a href="#" class="list-button item-link mq-list-button" @click="onClickImport">Import</a></li>
+			</ul>
+		</div>
+		<div id="move-id"></div>
+	</div>
+	<div class="toolbar tabbar toolbar-bottom-md">
+		<div class="toolbar-inner sliding">
+			<a href="/home/" class="tab-link">
+				<i class="icon f7-icons">paper_plane</i>
+			</a>
+			<a href="#moves" class="tab-link tab-link-active">
+				<i class="icon f7-icons">data</i>
+			</a>
+			<a href="/settings/" class="tab-link">
+				<i class="icon f7-icons">filter</i>
+			</a>
+		</div>
+	</div>
+</div>
+</template>
+<script>
+return {
+	on: {
+		pageInit: function(e, page) {
+			var query = page.route.query;
+			var $ = this.$;
+			var app = this.$app;
+			var moveId = query.m;
+			$("#move-id").html(moveId);
+		}
+	},
+
+    methods: {
+		onClickImport: function() {
+			var NB_SERVOS = 8;
+			var $ = this.$;
+			var app = this.$app;
+			var moveId = $("#move-id").html();
+			var jsonText = $('#mq-json-import').val();
+			try {
+				var json = JSON.parse(jsonText);
+				// check we have a name
+				if ((typeof json.name == 'undefined') || (json.name == '')) {
+					app.dialog.alert("name is undefined", "Missing property");
+					return;
+				}
+				// check we have some steps
+				if (typeof json.steps == 'undefined') {
+					app.dialog.alert("steps are undefined", "Missing property");
+					return;
+				}
+				for (var i=0; i<json.steps.length; i++) {
+					// check that all steps have NB_SERVOS+1 elements
+					if (json.steps[i].length < NB_SERVOS+1) {
+						app.dialog.alert("step " + (i+1) + " need to have " + NB_SERVOS + " positions and one time", "Missing property");
+						return;
+					}
+				}
+				// we are good, send the steps to the MiniQuad
+				for (var i=0; i<json.steps.length; i++) {
+					var cmd = "config:move:" + moveId + ":" + i + ":";
+					for (var j=0; j<NB_SERVOS+1; j++) sendWSCommand(cmd + j + ":" + json.steps[i][j]);
+				}
+				sendWSCommand("config:move:" + moveId + ":save:" + json.name);
+				this.$router.navigate('/moves-edit/');
+			} catch(e) {
+				app.dialog.alert(e.message.substring(11), "Syntax error");
+			}
+		}
+	}
+}
+</script>

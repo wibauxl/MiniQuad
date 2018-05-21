@@ -11,8 +11,8 @@ var routes = [
     },
   },
   {
-    path: '/moves/',
-    componentUrl: './moves.html',
+    path: '/custom-moves/',
+    componentUrl: './custom-moves.html',
 	options: {
         animate: false,
     },
@@ -24,6 +24,10 @@ var routes = [
   {
     path: '/move-steps/',
     componentUrl: './move-steps.html',
+  },
+  {
+    path: '/move-import/',
+    componentUrl: './move-import.html',
   },
   {
     path: '/move-step-edit/',

@@ -20,20 +20,20 @@
 				<tr>
 					<td></td>
 					<td style="width: 75vw">
-						<table>	
+						<table>
 							<tr>
 								<td></td>
-								<td><a href="#forward" class="mq-button" id="m10" @click="onClickMove('m10')"><i class="icon f7-icons mq-icon">arrow_up</i></a></td>
+								<td><a href="#forward" class="mq-button" id="m10" @click="onClickMove('10')"><i class="icon f7-icons mq-icon">arrow_up</i></a></td>
 								<td></td>
 							</tr>
 							<tr>
-								<td><a href="#left" class="mq-button" id="m13" @click="onClickMove('m13')"><i class="icon f7-icons mq-icon">arrow_left</i></a></td>
+								<td><a href="#left" class="mq-button" id="m13" @click="onClickMove('13')"><i class="icon f7-icons mq-icon">arrow_left</i></a></td>
 								<td><a href="#stop" class="mq-button mq-active" id="stop" @click="onClickMove('stop')"><i class="icon f7-icons mq-icon">pause_fill</i></a></td>
-								<td><a href="#right" class="mq-button" id="m11" @click="onClickMove('m11')"><i class="icon f7-icons mq-icon">arrow_right</i></a></td>
+								<td><a href="#right" class="mq-button" id="m11" @click="onClickMove('11')"><i class="icon f7-icons mq-icon">arrow_right</i></a></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td><a href="#backward" class="mq-button" id="m12" @click="onClickMove('m12')"><i class="icon f7-icons mq-icon">arrow_down</i></a></td>
+								<td><a href="#backward" class="mq-button" id="m12" @click="onClickMove('12')"><i class="icon f7-icons mq-icon">arrow_down</i></a></td>
 								<td></td>
 							</tr>
 						</table>
@@ -76,30 +76,30 @@
 			</a>
 		</div>
 	</div>
-
-</div>		
+</div>
 </template>
 <script>
 return {
 	on: {
-		pageInit: function () {
+		pageBeforeIn: function () {
 			sendWSCommand("action:speed:main:get");
 			sendWSCommand("battery:get");
 		},
-		
-        pageAfterOut: function() {
+
+    pageAfterOut: function() {
 			sendWSCommand("action:move:stop");
 		},
 	},
-		
-    methods: {
-		onClickMove: function(buttonId) {
+
+  methods: {
+		onClickMove: function(actionName) {
 			var $ = this.$;
-			sendWSCommand("action:move:" + buttonId);
+			sendWSCommand("action:move:" + actionName);
 			$('.mq-button').removeClass('mq-active');
-			$("#" + buttonId).addClass('mq-active');
+			if (actionName == 'stop') $("#stop").addClass('mq-active');
+			else $("#m" + actionName).addClass('mq-active');
 		},
-				
+
 		onChangeSpeed: function (e, range) {
 			var $ = this.$;
 			var app = this.$app;

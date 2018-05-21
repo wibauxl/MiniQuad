@@ -30,6 +30,10 @@ var routes = [
     componentUrl: './move-import.html',
   },
   {
+    path: '/move-export/',
+    componentUrl: './move-export.html',
+  },
+  {
     path: '/move-step-edit/',
     componentUrl: './move-step-edit.html',
   },

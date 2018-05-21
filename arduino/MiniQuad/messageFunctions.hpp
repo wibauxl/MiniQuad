@@ -1,6 +1,6 @@
 /**
  * Messages sent by the html application
- * 
+ *
  *  config:calibration:save             save calibration into config.json
  *  config:calibrate:ID:center:V        set servo ID center calibration to V
  *  config:calibrate:ID:range:V         set servo ID range calibration to V
@@ -11,7 +11,7 @@
  *  config:move:M:S:duplicate           duplicate step S of move M
  *  config:move:M:S:delete              delete step S of move M
  *  config:move:M:S:N:V                 set servo N of step S of move M to value V
- *  
+ *
  *  action:test:center                  bring all servos to center
  *  action:test:range:hips              go from center to min to max to center for hips servos
  *  action:test:range:legs              go from center to min to max to center for legs servos
@@ -21,7 +21,7 @@
  *  action:speed:custom:set:V 	        set the speed for user moves
  *  action:move:stop                    stop moves
  *  action:move:M                       start move number N
- *  
+ *
  *  battery:get                         send the bettery value
  */
 /**
@@ -32,15 +32,15 @@
  */
 
 
-/** handle batrey:get
+/** handle battery:get
  */
 void broadcastBatteryState() {
   wsSendValue("battery", battery);
 }
 
 void updateBatteryState() {
-  // int battery = analogRead(A0);
-  battery = BATTERY_MAX - timeStamp/4000;
+  // battery = BATTERY_MAX - timeStamp/4000;
+  battery = analogRead(A0);
   battery = map(battery, BATTERY_MIN, BATTERY_MAX, 0, 100);
   if (battery < 0) battery = 0;
   else if (battery > 100) battery = 100;
@@ -53,8 +53,8 @@ void updateBatteryState() {
  *  action:test:range:legs              go from center to min to max to center for legs servos
  *  action:speed:main:get               get the speed for the 4 main moves
  *  action:speed:main:set:V             set the speed for the 4 main moves
- *  action:speed:custom:get             get the speed for user moves
- *  action:speed:custom:set:V           set the speed for user moves
+ *  action:speed:custom:get             get the speed for custom moves
+ *  action:speed:custom:set:V           set the speed for custom moves
  *  action:move:stop                    stop moves
  *  action:move:M                       start move number N
  */
@@ -62,7 +62,7 @@ void handleServoAction(String *params) {
   if (params[1].equals("test")) {
     if (params[2].equals("center")) {
       miniQuadState = MINI_QUAD_IDLE;
-      for (int i=0; i<NB_SERVOS; i++) servoRawWrite(i, miniQuadConfig.servoCenter[i]);
+      for (int i=0; i<NB_SERVOS; i++) servoWrite(i, 0);
     } else {  // range
       if (params[3].equals("hips")) miniQuadState = MINI_QUAD_TEST_HIPS_RANGE;
       else miniQuadState = MINI_QUAD_TEST_LEGS_RANGE;
@@ -74,7 +74,7 @@ void handleServoAction(String *params) {
     } else {  //set
       int speed = params[4].toInt();
       if (params[2].equals("main")) miniQuadConfig.speed = speed;
-      else miniQuadConfig.customSpeed = speed;      
+      else miniQuadConfig.customSpeed = speed;
     }
   } else {
     if (params[2].equals("stop")) miniQuadState = MINI_QUAD_IDLE;
@@ -87,27 +87,25 @@ void handleServoAction(String *params) {
 }
 
 /** handle config:calibrate:...
- *  config:calibrate:ID:center:V        set servo ID center calibration to V
- *  config:calibrate:ID:range:V         set servo ID range calibration to V
+ *  config:calibrate:N:center:V        set servo N center calibration to V
+ *  config:calibrate:N:range:V         set servo N range calibration to V
  */
 void setServoCalibration(String *params) {
-  String servoId = params[2];
-  int servoNb = 0;
-  for (; servoNb<NB_SERVOS; servoNb++) {
-    if (miniQuadServoNames[servoNb].equals(servoId)) break;
-  }
+  String servoNb = params[2].toInt();
   int servoValue = params[4].toInt();
   if (params[3].equals("center")) {
     miniQuadConfig.servoCenter[servoNb] = servoValue;
-    servoWrite(servoNb, servoValue);
+    servoWriteDegrees(servoNb, servoValue-90);
   } else {
     miniQuadConfig.servoRange[servoNb] = servoValue;
-    servoWrite(servoNb, miniQuadConfig.servoCenter[servoNb] + servoValue);
+    servoWriteDegrees(servoNb, miniQuadConfig.servoCenter[servoNb]-90 + servoValue);
   }
 }
 
 /** handle config:move:...
  *  config:move:M:save:NAME             save move M into moveN.json with name NAME
+ *  config:move:M:duplicate             duplicate move M into free slot
+ *  config:move:M:delete                delete move M
  *  config:move:M:S:duplicate           duplicate step S of move M
  *  config:move:M:S:delete              delete step S of move M
  *  config:move:M:S:N:V                 set servo N of step S of move M to value V
@@ -149,14 +147,14 @@ void setMoveConfiguration(String *params) {
     if (params[4].equals("save")) {
       if (miniQuadMovesConfig[moveId].stepChanged) miniQuadMovesConfig[moveId].changed = true;
     } else if (params[4].equals("delete")) {
-      if (stepId < miniQuadMovesConfig[moveId].nbSteps-1) 
+      if (stepId < miniQuadMovesConfig[moveId].nbSteps-1)
         // shift down all steps
         memcpy(miniQuadMovesConfig[moveId].steps[stepId], miniQuadMovesConfig[moveId].steps[stepId+1], miniQuadMovesConfig[moveId].nbSteps-stepId-1);
       if (miniQuadMovesConfig[moveId].nbSteps > 0) miniQuadMovesConfig[moveId].nbSteps --;
       miniQuadMovesConfig[moveId].changed = true;
     } else if (params[4].equals("duplicate")) {
       // shift up all steps
-      for (int step=miniQuadMovesConfig[moveId].nbSteps; step>stepId; step--) 
+      for (int step=miniQuadMovesConfig[moveId].nbSteps; step>stepId; step--)
         memcpy(miniQuadMovesConfig[moveId].steps[step], miniQuadMovesConfig[moveId].steps[step-1], NB_SERVOS+1);
       miniQuadMovesConfig[moveId].nbSteps ++;
       miniQuadMovesConfig[moveId].changed = true;

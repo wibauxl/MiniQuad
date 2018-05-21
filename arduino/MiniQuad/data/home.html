@@ -20,20 +20,20 @@
 				<tr>
 					<td></td>
 					<td style="width: 75vw">
-						<table>	
+						<table>
 							<tr>
 								<td></td>
-								<td><a href="#" class="mq-button" id="forward" @click="onClickAction"><i class="icon f7-icons mq-icon">arrow_up</i></a></td>
+								<td><a href="#forward" class="mq-button" id="m10" @click="onClickMove('10')"><i class="icon f7-icons mq-icon">arrow_up</i></a></td>
 								<td></td>
 							</tr>
 							<tr>
-								<td><a href="#" class="mq-button" id="left" @click="onClickAction"><i class="icon f7-icons mq-icon">arrow_left</i></a></td>
-								<td><a href="#" class="mq-button mq-active" id="stop" @click="onClickAction"><i class="icon f7-icons mq-icon">pause_fill</i></a></td>
-								<td><a href="#" class="mq-button" id="right" @click="onClickAction"><i class="icon f7-icons mq-icon">arrow_right</i></a></td>
+								<td><a href="#left" class="mq-button" id="m13" @click="onClickMove('13')"><i class="icon f7-icons mq-icon">arrow_left</i></a></td>
+								<td><a href="#stop" class="mq-button mq-active" id="stop" @click="onClickMove('stop')"><i class="icon f7-icons mq-icon">pause_fill</i></a></td>
+								<td><a href="#right" class="mq-button" id="m11" @click="onClickMove('11')"><i class="icon f7-icons mq-icon">arrow_right</i></a></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td><a href="#" class="mq-button" id="backward" @click="onClickAction"><i class="icon f7-icons mq-icon">arrow_down</i></a></td>
+								<td><a href="#backward" class="mq-button" id="m12" @click="onClickMove('12')"><i class="icon f7-icons mq-icon">arrow_down</i></a></td>
 								<td></td>
 							</tr>
 						</table>
@@ -68,7 +68,7 @@
 			<a href="#home" class="tab-link tab-link-active">
 				<i class="icon f7-icons">paper_plane</i>
 			</a>
-			<a href="/moves/" class="tab-link">
+			<a href="/custom-moves/" class="tab-link">
 				<i class="icon f7-icons">data</i>
 			</a>
 			<a href="/settings/" class="tab-link">
@@ -76,36 +76,35 @@
 			</a>
 		</div>
 	</div>
-
-</div>		
+</div>
 </template>
 <script>
 return {
 	on: {
-		pageInit: function () {
-			sendWSCommand("action:speed:get");
+		pageBeforeIn: function () {
+			sendWSCommand("action:speed:main:get");
 			sendWSCommand("battery:get");
 		},
-		
-        pageAfterOut: function() {
+
+    pageAfterOut: function() {
 			sendWSCommand("action:move:stop");
 		},
 	},
-		
-    methods: {
-		onClickAction: function(e) {
+
+  methods: {
+		onClickMove: function(actionName) {
 			var $ = this.$;
-			var buttonId = $(e.target).parent().attr('id');
-			sendWSCommand("action:move:" + buttonId);
+			sendWSCommand("action:move:" + actionName);
 			$('.mq-button').removeClass('mq-active');
-			$("#" + buttonId).addClass('mq-active');
+			if (actionName == 'stop') $("#stop").addClass('mq-active');
+			else $("#m" + actionName).addClass('mq-active');
 		},
-				
+
 		onChangeSpeed: function (e, range) {
 			var $ = this.$;
 			var app = this.$app;
 			var speed = app.range.getValue("#mq-speed");
-			sendWSCommand("action:speed:set:" + speed);
+			sendWSCommand("action:speed:main:set:" + speed);
 		},
 	}
 }

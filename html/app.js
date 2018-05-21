@@ -12,8 +12,17 @@ var app = new Framework7({
   root: '#app',
   id: 'com.github.miniquad',
   theme: theme,
-  routes: routes,
+  routes: routes
 });
+
+// Get the config and store it
+var miniquadConfig;
+app.request.json('config.json', function (data) {
+  miniquadConfig = data;
+});
+getMiniquadConfig = function() {
+  return miniquadConfig;
+}
 
 // Create a WebSocket to get/set simple values quickly
 // values are sent as parameter_name[:target]:parameter_value
@@ -31,7 +40,7 @@ ws.onmessage = function(e) {
 		$('.mq-battery-text').html((value < 100 ? " " : "") + (value < 10 ? " " : "") + value + "%");
 		$('.mq-battery-fill').attr('width', value);
 	} else if (data[0] == "speed") {
-		var value = parseInt(data[2]);	
+		var value = parseInt(data[2]);
 		if (data[1] == "main") app.range.setValue("#mq-speed", value);
 		else app.range.setValue("#mq-custom-move-speed", value);
 	}

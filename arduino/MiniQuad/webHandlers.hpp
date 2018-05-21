@@ -34,8 +34,8 @@ void handleDynamicJsonRequest(AsyncWebServerRequest *request) {
 #ifdef MINIQUAD_DEBUG  
   Serial.printf("Dealing with JSON request: http://%s%s\n", request->host().c_str(), request->url().c_str());
 #endif
-    AsyncResponseStream *response = request->beginResponseStream("text/json");
-    response->addHeader("Server", String(miniQuadConfig.hostName));
+  AsyncResponseStream *response = request->beginResponseStream("text/json");
+  response->addHeader("Server", String(miniQuadConfig.hostName));
   if (request->url().equals("moves.json")) {
     response->print(movesJson);
   } else {

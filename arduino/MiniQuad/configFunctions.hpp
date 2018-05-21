@@ -1,3 +1,32 @@
+/**
+ * config.json example
+{
+	"host": "MiniQuad-E34567",
+	"servoNames": ["RRL", "RRH", "RLH", "RLL", "FRL", "FRH", "FLH", "BLL"],
+	"servoCenters": [90, 80, 90, 90, 90, 90, 90, 90],
+	"servoRanges": [40, 30, 40, 40, 40, 40, 40, 40]
+}
+*/
+void saveConfig() {
+  if (!miniQuadConfig.changed) return;
+  StaticJsonBuffer<1024> jsonBuffer;
+  JsonObject& configJson = jsonBuffer.createObject();
+  configJson["host"] = miniQuadConfig.hostName;
+  JsonArray& servoNames = configJson.createNestedArray("servoNames");
+  JsonArray& servoCenters = configJson.createNestedArray("servoCenters");
+  JsonArray& servoRanges = configJson.createNestedArray("servoRanges");
+  for (int i=0; i<NB_SERVOS; i++) {
+    servoNames.add(miniQuadServoNames[i].c_str());
+    servoCenters.add(miniQuadConfig.servoCenter[i]);
+    servoRanges.add(miniQuadConfig.servoRange[i]);
+  }
+  File file = SPIFFS.open(CONFIG_FILE, "w");
+  configJson.printTo(file);
+  file.flush();
+  file.close();
+  miniQuadConfig.changed = false;
+  Serial.println("/config.json saved");
+}
 
 void initConfig() {
   miniQuadConfig.changed = true;
@@ -10,6 +39,7 @@ void initConfig() {
       miniQuadConfig.servoRange[i] = 40;
   }
   miniQuadConfig.wiFiNeedSetup = true;
+  saveConfig();
 }
 
 void loadConfig() {
@@ -30,39 +60,18 @@ void loadConfig() {
     initConfig();
   } else {
     Serial.println("using /config.json");
-#ifdef MINIQUAD_DEBUG    
+#ifdef MINIQUAD_DEBUG
     configJson.prettyPrintTo(Serial);
 #endif
     strcpy(miniQuadConfig.hostName, configJson["host"]);
-    JsonArray& servo = configJson["servo"];
+    JsonArray& servoCenters = configJson["servoCenters"];
+    JsonArray& servoRanges = configJson["servoRanges"];
     for (int i=0; i<NB_SERVOS; i++) {
-      miniQuadConfig.servoCenter[i] = servo[i][1];
-      miniQuadConfig.servoRange[i] = servo[i][2];
+      miniQuadConfig.servoCenter[i] = servoCenters[i];
+      miniQuadConfig.servoRange[i] = servoRanges[i];
     }
   }
   file.close();
   Serial.println();
   Serial.println();
 }
-
-void saveConfig() {
-  if (!miniQuadConfig.changed) return;
-  StaticJsonBuffer<1024> jsonBuffer;
-  JsonObject& configJson = jsonBuffer.createObject();
-  configJson["host"] = miniQuadConfig.hostName;
-  JsonArray& servos = configJson.createNestedArray("servo");
-  for (int i=0; i<NB_SERVOS; i++) {
-    JsonArray& servo = servos.createNestedArray();
-    servo.add(miniQuadServoNames[i].c_str());
-    servo.add(miniQuadConfig.servoCenter[i]);
-    servo.add(miniQuadConfig.servoRange[i]);
-  }
-  File file = SPIFFS.open(CONFIG_FILE, "w");
-  configJson.printTo(file);
-  file.flush();
-  file.close();
-  miniQuadConfig.changed = false;
-  Serial.println("/config.json saved");
-}
-
-

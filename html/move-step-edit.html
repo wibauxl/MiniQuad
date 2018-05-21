@@ -17,7 +17,7 @@
 		<div class="block-title">Servo target positions</div>
 		<div class="list simple-list">
 			<ul>
-				{{#each servoTarget}}
+				{{#each servoNames}}
 				<li class="item-row">
 					<div class="item-cell flex-shrink-0 mq-servo-label">{{this}}</div>
 					<div class="item-cell width-auto flex-shrink-0">
@@ -41,7 +41,7 @@
 			</ul>
 		</div>
 		<!-- execution time -->
-		<div class="block-title">Time required to reach target positions</div>
+		<div class="block-title">Pause before executing next step</div>
 		<div class="list simple-list">
 			<ul>
 				<li>
@@ -90,11 +90,9 @@
 <script>
 return {
 	data: function () {
-		return {
-			"servoTarget":['RRL', 'RRH', 'RLH', 'RLL', 'FRL', 'FRH', 'FLH', 'BLL']
-		}
+		return getMiniquadConfig();
 	},
-	
+
 	on: {
 		pageInit: function(e, page) {
 			var query = page.route.query;
@@ -109,7 +107,7 @@ return {
 			$("#move-step-step-number").html(stepNb+1);
 			$('#move-step-link-back').attr('href', "/move-steps/?m=" + moveId);
 			app.request.json("m" + moveId + ".json", function (data) {
-				$("#move-step-move-name").html(data.name);	
+				$("#move-step-move-name").html(data.name);
 				if (stepNb <= data.steps.length) {
 					if (stepNb == data.steps.length) stepNb--;
 					for (var i=0; i<9; i++) app.range.setValue("#move-step-" + i, data.steps[stepNb][i]);
@@ -118,33 +116,32 @@ return {
 				}
 			});
 		},
-		
-        pageBeforeOut: function() {
+
+    pageBeforeOut: function() {
 			var $ = this.$;
-			var moveId = $("#move-id").html();
 			var moveId = $("#move-step-mid").html();
 			var stepId = $("#move-step-sid").html();
 			sendWSCommand("config:move:" + moveId + ":" + stepId + ":save");
-		},	
+		},
 	},
-	
-    methods: {
+
+  methods: {
 		onClickMoveStepAction: function(actionToDo) {
 			var $ = this.$;
 			var app = this.$app;
 			var moveId = $("#move-step-mid").html();
 			var stepId = $("#move-step-sid").html();
+			if (actionToDo == "duplicate") sendWSCommand("config:move:" + moveId + ":" + stepId + ":save");
 			sendWSCommand("config:move:" + moveId + ":" + stepId + ":" + actionToDo);
-			var router = this.$router;
-			router.navigate("/move-steps/?m=" + moveId);
+			this.$router.navigate("/move-steps/?m=" + moveId);
 		},
-		
+
 		onClickMoveStepSlider: function(sliderId, value) {
 			var app = this.$app;
 			var sliderValue = app.range.getValue("#" + sliderId);
 			app.range.setValue("#" + sliderId, sliderValue + value);
 		},
-		
+
 		onChangeMoveStepSlider: function(e, range) {
 			var $ = this.$;
 			var app = this.$app;

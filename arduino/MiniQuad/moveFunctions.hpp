@@ -35,7 +35,7 @@
 #define SERVO_MAX_PULSE 150   // ms
 Adafruit_PWMServoDriver miniQuadServoDriver = Adafruit_PWMServoDriver();
 #else
-Servo miniQuadServos[8];  
+Servo miniQuadServos[NB_SERVOS];  
 #endif
 
 #define MINI_QUAD_IDLE 0
@@ -59,7 +59,7 @@ void servoWriteDegrees(uint8_t servoNb, int8_t degrees) {
 
 // write in percentage of the calibrated range
 void servoWrite(uint8_t servoNb, int8_t percentage) {
-  servoRawWrite(servoNb, map(percentage, -100, 100, miniQuadConfig.servoCenter[servoNb]-miniQuadConfig.servoRange[servoNb], miniQuadConfig.servoCenter[servoNb]+miniQuadConfig.servoRange[servoNb])); 
+  servoWriteDegrees(servoNb, map(percentage, -100, 100, miniQuadConfig.servoCenter[servoNb]-miniQuadConfig.servoRange[servoNb], miniQuadConfig.servoCenter[servoNb]+miniQuadConfig.servoRange[servoNb])); 
 }
 
 void startServos() {
@@ -69,7 +69,7 @@ void startServos() {
 #else
   for (int i=0; i<NB_SERVOS; i++) miniQuadServos[i].attach(miniQuadServoPins[i]);
 #endif  
-  for (int i=0; i<NB_SERVOS; i++) servoRawWrite(i, miniQuadConfig.servoCenter[i]);
+  for (int i=0; i<NB_SERVOS; i++) servoWriteDegrees(i, miniQuadConfig.servoCenter[i]);
 }
 
 
@@ -102,8 +102,8 @@ void setMoveJson(int moveId) {
 
 void loadMovesConfig() {
   StaticJsonBuffer<MOVE_JSON_BUFFER_SIZE> jsonBuffer;
-  // parse files from move1.json to move13.json
-  for (int moveId=0; moveId<NB_MOVES+4; moveId++) {
+  // parse files from move1.json to move12.json
+  for (int moveId=0; moveId<NB_MOVES; moveId++) {
     File file = SPIFFS.open(String("move")+String(moveId+1)+String(".json"), "r");
     if (file) {
       JsonObject& moveJson = jsonBuffer.parseObject(file);
