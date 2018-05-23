@@ -71,14 +71,11 @@
 <script>
 return {
 	on: {
-		pageInit: function(e, page) {
+		pageBeforeIn: function(e, page) {
 			app.request.json('moves.json', function (data) {
-				for (var cm=1; cm<1+data.length-4; cm++) {
-					if (cm == data[cm-1].id) {
-						$("#me" + cm).html(data[cm-1].n);
-						$("#me" + cm).removeClass("mq-button-unused");
-						break;
-					}
+				for (var cm=0; cm<data.length-4; cm++) {
+					$("#me" + data[cm].id).html(data[cm].n);
+					$("#me" + data[cm].id).removeClass("mq-button-unused");
 				}
 			});
 		}

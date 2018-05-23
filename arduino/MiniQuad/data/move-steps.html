@@ -26,6 +26,7 @@
 		<div class="list links-list" id="move-steps-list"></div>
 		<div class="list">
 			<ul>
+				<li id="move-export"><a href="#" class="list-button item-link mq-list-button" @click="onClickAction('export')">Export</a></li>
 				<li id="move-import"><a href="#" class="list-button item-link mq-list-button" @click="onClickAction('import')">Import</a></li>
 				<li id="move-duplicate"><a href="#" class="list-button item-link mq-list-button" @click="onClickAction('duplicate')">Duplicate</a></li>
 				<li id="move-delete"><a href="#" class="list-button item-link mq-list-button" style="color: red" @click="onClickAction('delete')">Delete</a></li>
@@ -57,9 +58,11 @@ return {
 			var moveId = query.m;
 			$("#move-id").html(moveId);
 			if (query.cm != undefined) {
+				// create move
 				$('#move-name').val("Move-" + moveId);
 				var stepsList = "<ul><li><a href='/move-step-edit/?m=" + moveId + "&s=0'><i style='color: grey'>Create step</i></a></li></ul>";
 				$("#move-steps-list").html(stepsList);
+				$('#move-export').css('display', 'none');
 				$('#move-delete').css('display', 'none');
 				$('#move-duplicate').css('display', 'none');
 			} else {
@@ -113,6 +116,7 @@ return {
 					$("#move-steps-list").html(stepsList);
 					$('#move-delete').css('display', 'none');
 					$('#move-duplicate').css('display', 'none');
+					$('#move-export').css('display', 'none');
 				});
 			}
 		},
@@ -134,6 +138,8 @@ return {
 			var router = this.$router;
 			if (actionToDo === 'import') {
 				router.navigate("/move-import/?m=" + moveId);
+			} else	if (actionToDo === 'export') {
+				router.navigate("/move-export/?m=" + moveId);
 			} else {
 				sendWSCommand("config:move:" + moveId + ":" + actionToDo);
 				router.navigate('/moves-edit/');

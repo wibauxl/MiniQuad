@@ -91,17 +91,18 @@
 <script>
 return {
 	data: function () {
-		return getMiniquadConfig();
+		return getMiniQuadServoNames();
 	},
 
 	on: {
 		pageBeforeIn: function () {
 			var app = this.$app;
-			miniquadConfig = getMiniquadConfig();
-			for (var i=0; i<miniquadConfig.servoCenters.length; i++) {
-				app.range.setValue("#mq-servo-setting-center-" + i, miniquadConfig.servoCenters[i]);
-				app.range.setValue("#mq-servo-setting-range-" + i, miniquadConfig.servoRanges[i]);
-			}
+			app.request.json("config.json", function (data) {
+				for (var i=0; i<data.servoCenters.length; i++) {
+					app.range.setValue("#mq-servo-setting-center-" + i, data.servoCenters[i]);
+					app.range.setValue("#mq-servo-setting-range-" + i, data.servoRanges[i]);
+				}
+			});
 		},
 
     pageAfterOut: function() {

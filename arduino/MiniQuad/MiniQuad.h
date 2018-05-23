@@ -38,15 +38,15 @@ IPAddress netMsk(255, 255, 255, 0);
 #define BLL   0   /* D3 */
 #define SONAR 5
 
-const int miniQuadServoPins[NB_SERVOS] = { FLL, FLH, FRH, FRL, BLL, BRH, BLH, BLL };
-String miniQuadServoNames[NB_SERVOS+1] = { "FLH", "FLL", "FRH", "FRL", "BLL", "BLH", "BLH", "BLL", "time" };
+const int miniQuadServoPins[NB_SERVOS] = { FLL, FLH, FRH, FRL, BLL, BLH, BRH, BRL };
+String miniQuadServoNames[NB_SERVOS+1] = { "FLL", "FLH", "FRH", "FRL", "BLL", "BLH", "BRH", "BRL", "time" };
 
 typedef struct MiniQuadConfig {
   // saved item
   char hostName[20];
   int servoCenter[NB_SERVOS];
   int servoRange[NB_SERVOS];
-  
+
   // runtime items
   bool changed;
   bool wiFiNeedSetup;
@@ -78,8 +78,8 @@ MiniQuadMoveConfig miniQuadMovesConfig[NB_MOVES];
 int32_t timeStamp;
 
 #define BATTERY_REFRESH 10                /* seconds between 2 battery value measurements */
-#define BATTERY_MIN (32*1024*100/10/570)  /* 3.2V : 100/570 divider : scale of 0 to 1024 */ 
-#define BATTERY_MAX (43*1024*100/10/570)  /* 4.3V : 100/570 divider : scale of 0 to 1024 */ 
+#define BATTERY_MIN (32*1024*100/10/570)  /* 3.2V : 100/570 divider : scale of 0 to 1024 */
+#define BATTERY_MAX (43*1024*100/10/570)  /* 4.3V : 100/570 divider : scale of 0 to 1024 */
 uint8_t battery = 100;
 
 #endif

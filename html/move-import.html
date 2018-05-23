@@ -57,9 +57,9 @@ return {
 		}
 	},
 
-    methods: {
+  methods: {
 		onClickImport: function() {
-			var NB_SERVOS = 8;
+			var NB_SERVOS = getMiniquadServoNames().servoNames.length;
 			var $ = this.$;
 			var app = this.$app;
 			var moveId = $("#move-id").html();
@@ -76,17 +76,29 @@ return {
 					app.dialog.alert("steps are undefined", "Missing property");
 					return;
 				}
-				for (var i=0; i<json.steps.length; i++) {
+				for (var s=0; s<json.steps.length; s++) {
 					// check that all steps have NB_SERVOS+1 elements
-					if (json.steps[i].length < NB_SERVOS+1) {
-						app.dialog.alert("step " + (i+1) + " need to have " + NB_SERVOS + " positions and one time", "Missing property");
+					if (json.steps[s].length < NB_SERVOS+1) {
+						app.dialog.alert("step " + (s+1) + " need to have " + NB_SERVOS + " positions and one pause", "Missing value");
+						return;
+					}
+					for (var n=0; n<NB_SERVOS; n++) {
+						if (json.steps[s][n] < -100 || json.steps[s][n] > 100)
+							app.dialog.alert("step " + (s+1) + ", servo " + (n+1) + " need to fall between -100 and 100", "Unauthorised value");
+							return;
+						}
+					}
+					if (json.steps[s][NB_SERVOS] < 0 || json.steps[s][NB_SERVOS] > 100)
+						app.dialog.alert("step " + (s+1) + ", pause need to fall between 0 and 100", "Unauthorised value");
 						return;
 					}
 				}
 				// we are good, send the steps to the MiniQuad
-				for (var i=0; i<json.steps.length; i++) {
-					var cmd = "config:move:" + moveId + ":" + i + ":";
-					for (var j=0; j<NB_SERVOS+1; j++) sendWSCommand(cmd + j + ":" + json.steps[i][j]);
+				for (var s=0; s<json.steps.length; i++) {
+					var cmd = "config:move:" + moveId + ":" + s + ":";
+					for (var n=0; n<NB_SERVOS+1; n++) sendWSCommand(cmd + n + ":" + json.steps[s][n]);
+					// leave time to Miniquad to process
+					sleepMs(5);
 				}
 				sendWSCommand("config:move:" + moveId + ":save:" + json.name);
 				this.$router.navigate('/moves-edit/');

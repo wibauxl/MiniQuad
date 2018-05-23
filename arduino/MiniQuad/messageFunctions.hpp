@@ -29,6 +29,7 @@
  *  battery:V                           return the battery value V
  *  speed:main:V                        return the V speed for the main moves
  *  speed:user:V                       	return the V speed for the user moves
+ *  radar:V                             return the V distance in cm from the front of miniquad to the obstacle
  */
 
 

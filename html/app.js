@@ -16,12 +16,13 @@ var app = new Framework7({
 });
 
 // Get the config and store it
-var miniquadConfig;
+// only the servoNames will be used
+var miniQuadServoNames;
 app.request.json('config.json', function (data) {
-  miniquadConfig = data;
+  miniQuadServoNames = data;
 });
-getMiniquadConfig = function() {
-  return miniquadConfig;
+getMiniQuadServoNames = function() {
+  return miniQuadServoNames;
 }
 
 // Create a WebSocket to get/set simple values quickly
@@ -43,12 +44,23 @@ ws.onmessage = function(e) {
 		var value = parseInt(data[2]);
 		if (data[1] == "main") app.range.setValue("#mq-speed", value);
 		else app.range.setValue("#mq-custom-move-speed", value);
-	}
+	} else if (data[0] == "radar") {
+		var value = parseInt(data[1]);
+    // do something with the radar value
+  }
 };
 
 sendWSCommand = function(command) {
 	console.log("/ws/ < " + command);
 	ws.send(command);
+};
+
+// sleep function
+sleepMs = function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds) break;
+  }
 };
 
 // Load the initial page

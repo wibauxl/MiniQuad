@@ -1,6 +1,6 @@
 {
 	"host": "MiniQuad-E34567",
-	"servoNames": ["RRL", "RRH", "RLH", "RLL", "FRL", "FRH", "FLH", "BLL"],
+	"servoNames": ["FLL", "FLH", "FRH", "FRL", "BLL", "BLH", "BRH", "BRL"],
 	"servoCenters": [90, 80, 90, 90, 90, 90, 90, 90],
 	"servoRanges": [40, 30, 40, 40, 40, 40, 40, 40]
 }
