@@ -63,11 +63,11 @@ void updateBatteryState() {
 void handleServoAction(String *params) {
   if (params[1].equals("test")) {
     if (params[2].equals("center")) {
-      miniQuadState = MINI_QUAD_IDLE;
+      miniQuadMove = MINI_QUAD_IDLE;
       for (int i=0; i<NB_SERVOS; i++) servoWrite(i, 0);
     } else {  // range
-      if (params[3].equals("hips")) miniQuadState = MINI_QUAD_TEST_HIPS_RANGE;
-      else miniQuadState = MINI_QUAD_TEST_LEGS_RANGE;
+      if (params[3].equals("hips")) miniQuadMove = MINI_QUAD_TEST_HIPS_RANGE;
+      else miniQuadMove = MINI_QUAD_TEST_LEGS_RANGE;
     }
   } else if (params[1].equals("speed")) {
     if (params[3].equals("get")) {
@@ -79,12 +79,8 @@ void handleServoAction(String *params) {
       else miniQuadConfig.customSpeed = speed;
     }
   } else {
-    if (params[2].equals("stop")) miniQuadState = MINI_QUAD_IDLE;
-    else {
-      miniQuadState = MINI_QUAD_MOVE;
-      miniQuadStep = 0;
-      setMove(params[2].toInt());
-    }
+    if (params[2].equals("stop")) miniQuadMove = MINI_QUAD_IDLE;
+    else setMove(params[2].toInt());
   }
 }
 
@@ -93,7 +89,7 @@ void handleServoAction(String *params) {
  *  config:calibrate:N:range:V         set servo N range calibration to V
  */
 void setServoCalibration(String *params) {
-  String servoNb = params[2].toInt();
+  int servoNb = params[2].toInt();
   int servoValue = params[4].toInt();
   if (params[3].equals("center")) {
     miniQuadConfig.servoCenter[servoNb] = servoValue;

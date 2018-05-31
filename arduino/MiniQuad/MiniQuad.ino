@@ -31,7 +31,7 @@ void setup() {
   // load the configurations
   loadConfig();
   loadMovesConfig();
-  
+
   // start the WiFi
   startWiFi(miniQuadConfig.hostName, MINI_QUAD_PASSWORD, miniQuadConfig.wiFiNeedSetup);
 
@@ -52,23 +52,23 @@ void setup() {
   // start the servos
   startServos();
 
-  timeStamp = millis();
+  batteryTimeStamp = millis();
 }
 
 void loop() {
   // handle the DNS
   dnsServer.processNextRequest();
-  
+
   // handle servo movements
   handleServoMoves();
 
   // save the configuration is they have changed
   saveConfig();
   saveMovesConfig();
-  
+
   // update the battery state every BATTERY_REFRESH second
-  if (millis() - timeStamp > (unsigned long)(BATTERY_REFRESH*1000)) {
-    timeStamp = millis();
+  if (millis() - batteryTimeStamp > (unsigned long)(BATTERY_REFRESH*1000)) {
+    batteryTimeStamp = millis();
     updateBatteryState();
   }
 }

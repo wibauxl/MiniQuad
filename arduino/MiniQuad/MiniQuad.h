@@ -75,11 +75,11 @@ typedef struct MiniQuadMoveConfig {
 
 MiniQuadMoveConfig miniQuadMovesConfig[NB_MOVES];
 
-int32_t timeStamp;
+int32_t batteryTimeStamp;
 
-#define BATTERY_REFRESH 10                /* seconds between 2 battery value measurements */
-#define BATTERY_MIN (32*1024*100/10/470)  /* 3.2V : 100/470 divider : scale of 0 to 1024 */
-#define BATTERY_MAX (43*1024*100/10/470)  /* 4.3V : 100/470 divider : scale of 0 to 1024 */
+#define BATTERY_REFRESH 10                /* seconds between succesive battery value measurements */
+#define BATTERY_MIN (32*1024*100/10/470)  /* 100/470 divider on A0: min battery is 3.2V => 3.2*100/470*1024 => BATTERY_MIN = 697 */
+#define BATTERY_MAX (43*1024*100/10/470)  /* 100/470 divider on A0: max battery is 4.3V => 4.3*100/470*1024 => BATTERY_MAX = 937 */
 uint8_t battery = 100;
 
 #endif

@@ -29,9 +29,9 @@ void handleWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, 
   }
 }
 
-// deals with the dynamic json created by the 
+// deals with the dynamic json created by the
 void handleDynamicJsonRequest(AsyncWebServerRequest *request) {
-#ifdef MINIQUAD_DEBUG  
+#ifdef MINIQUAD_DEBUG
   Serial.printf("Dealing with JSON request: http://%s%s\n", request->host().c_str(), request->url().c_str());
 #endif
   AsyncResponseStream *response = request->beginResponseStream("text/json");
@@ -40,7 +40,7 @@ void handleDynamicJsonRequest(AsyncWebServerRequest *request) {
     response->print(movesJson);
   } else {
     // getting mM.json
-    int moveId = request->url().substring(1, request->url().indexOf(".")).toInt();     
+    int moveId = request->url().substring(1, request->url().indexOf(".")).toInt();
     if (moveId == 0) response->print("{}");
     else response->print(miniQuadMovesConfig[moveId].json);
   }
@@ -52,7 +52,7 @@ void handleNotFound(AsyncWebServerRequest *request) {
     handleDynamicJsonRequest(request);
     return;
   }
-#ifdef MINIQUAD_DEBUG  
+#ifdef MINIQUAD_DEBUG
   Serial.printf("NOT_FOUND: ");
   if (request->method() == HTTP_GET) Serial.printf("GET");
   else if (request->method() == HTTP_POST) Serial.printf("POST");
@@ -67,4 +67,3 @@ void handleNotFound(AsyncWebServerRequest *request) {
   // redirect to index.html
   request->send(SPIFFS, "/splash.html");
 }
-

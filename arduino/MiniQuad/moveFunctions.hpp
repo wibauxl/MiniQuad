@@ -1,25 +1,26 @@
 /**
- * Pages will call moves.json and m1 to m13.json, these are generated on the fly from the moves to avoid reading from flash all the time
- *    moves.json
- *    [
- *      {"n":"Danse","id":2},
- *      {"n":"Forward","id":10}
- *    ]
- *
- *    m1.json
+ * Moves are stored as move1.json to move12.json where move1 to move4 are forward, right, backward and left
+ *    move1.json
  *    {
- *      "name" : "Salute",
+ *      "name" : "Forward",
+ *      "ids" : ["RRL", "RRH", "RLH", "RLL", "FRL", "FRH", "FLH', "BLL", "time"],
  *      "steps" : [
  *         [0, 0, 0, 0, 0, 0, 0, 0, 0],
  *         [-100, -100, -100, -100, 0, 0, 0, 0, 20]
  *       ]
  *    }
  *
- * Moves are stored as move1.json to move13.json where move10 to move13 are forward, right, backward and left
- *    move1.json
+ * The remote application will call moves.json and m1 to m12.json, these are generated on the fly
+ * from the moves to avoid reading from flash all the time.
+ *    moves.json
+ *    [
+ *      {"n":"Forward","id":1}
+ *      {"n":"Danse","id":8},
+ *    ]
+ *
+ *    m1.json
  *    {
  *      "name" : "Salute",
- *      "ids" : ["RRL", "RRH", "RLH", "RLL", "FRL", "FRH", "FLH', "BLL", "time"],
  *      "steps" : [
  *         [0, 0, 0, 0, 0, 0, 0, 0, 0],
  *         [-100, -100, -100, -100, 0, 0, 0, 0, 20]
@@ -38,23 +39,24 @@ Adafruit_PWMServoDriver miniQuadServoDriver = Adafruit_PWMServoDriver();
 Servo miniQuadServos[NB_SERVOS];
 #endif
 
-#define MINI_QUAD_IDLE 0
+#define MINI_QUAD_IDLE -1
 #define MINI_QUAD_MOVE 1
-#define MINI_QUAD_TEST_CENTER 2
-#define MINI_QUAD_TEST_HIPS_RANGE 3
-#define MINI_QUAD_TEST_LEGS_RANGE 4
+#define MINI_QUAD_TEST_CENTER 100
+#define MINI_QUAD_TEST_HIPS_RANGE 101
+#define MINI_QUAD_TEST_LEGS_RANGE 102
 
-uint8_t miniQuadState = MINI_QUAD_IDLE;
+int8_t miniQuadMove = MINI_QUAD_IDLE;
 int miniQuadStep = 0;
+int miniQuadSubStep = 0;
 String movesJson;
 
-// write in degrees -90 to 90
+// write in degrees from -90 to 90
 void servoWriteDegrees(uint8_t servoNb, int8_t degrees) {
-#ifdef USE_PWM_SERVO_DRIVER
-  miniQuadServoDriver.setPWM(servoNb, 0, map(position, -90, 90, SERVO_MIN_PULSE, SERVO_MAX_PULSE));
-#else
-  miniQuadServos[servoNb].write(90+position);
-#endif
+  #ifdef USE_PWM_SERVO_DRIVER
+    miniQuadServoDriver.setPWM(servoNb, 0, map(degrees, -90, 90, SERVO_MIN_PULSE, SERVO_MAX_PULSE));
+  #else
+    miniQuadServos[servoNb].write(90+position);
+  #endif
 }
 
 // write in percentage of the calibrated range
@@ -63,23 +65,24 @@ void servoWrite(uint8_t servoNb, int8_t percentage) {
 }
 
 void startServos() {
-#ifdef USE_PWM_SERVO_DRIVER
-  miniQuadServoDriver.begin();
-  miniQuadServoDriver.setPWMFreq(60);
-#else
-  for (int i=0; i<NB_SERVOS; i++) miniQuadServos[i].attach(miniQuadServoPins[i]);
-#endif
+  #ifdef USE_PWM_SERVO_DRIVER
+    miniQuadServoDriver.begin();
+    miniQuadServoDriver.setPWMFreq(60);
+  #else
+    for (int i=0; i<NB_SERVOS; i++) miniQuadServos[i].attach(miniQuadServoPins[i]);
+  #endif
   for (int i=0; i<NB_SERVOS; i++) servoWriteDegrees(i, miniQuadConfig.servoCenter[i]);
 }
 
-
-
 void handleServoMoves() {
-  if (miniQuadState == MINI_QUAD_IDLE) return;
+  if (miniQuadMove == MINI_QUAD_IDLE) return;
+  // 
 }
 
-
 void setMove(int moveId) {
+  miniQuadMove = moveId;
+  miniQuadStep = 0;
+  miniQuadSubStep = 0;
 }
 
 void setMoveJson(int moveId) {
@@ -104,7 +107,7 @@ void loadMovesConfig() {
   StaticJsonBuffer<MOVE_JSON_BUFFER_SIZE> jsonBuffer;
   // parse files from move1.json to move13.json, skipping move9.json
   for (int moveId=0; moveId<NB_MOVES; moveId++) {
-    File file = SPIFFS.open(String("move")+String(moveId+(moveId>8 ? 2 : 1))+String(".json"), "r");
+    File file = SPIFFS.open(String("move")+String(moveId)+String(".json"), "r");
     if (file) {
       JsonObject& moveJson = jsonBuffer.parseObject(file);
       if (moveJson.success()) {
@@ -121,9 +124,9 @@ void loadMovesConfig() {
       file.close();
     }
   }
-  // create a json file containing moves and their ids
+  // create a json String containing moves and their ids
   JsonArray& moveListJson = jsonBuffer.createArray();
-  for (int moveId=0; moveId<NB_MOVES+4; moveId++) {
+  for (int moveId=0; moveId<4+NB_MOVES; moveId++) {
     if (!miniQuadMovesConfig[moveId].defined) continue;
     JsonObject& move = moveListJson.createNestedObject();
     move["n"] = miniQuadMovesConfig[moveId].name;

@@ -90,11 +90,11 @@
 <script>
 return {
 	data: function () {
-		return getMiniquadServoNames();
+		return getMiniQuadServoNames();
 	},
 
 	on: {
-		pageInit: function(e, page) {
+		pageBeforeIn: function(e, page) {
 			var query = page.route.query;
 			var $ = this.$;
 			var app = this.$app;

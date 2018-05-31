@@ -17,12 +17,12 @@ var app = new Framework7({
 
 // Get the config and store it
 // only the servoNames will be used
-var miniquadServoNames;
+var miniQuadServoNames;
 app.request.json('config.json', function (data) {
-  miniquadServoNames = data;
+  miniQuadServoNames = data;
 });
-getMiniquadServoNames = function() {
-  return miniquadServoNames;
+getMiniQuadServoNames = function() {
+  return miniQuadServoNames;
 }
 
 // Create a WebSocket to get/set simple values quickly
