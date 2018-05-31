@@ -94,7 +94,7 @@ return {
 	},
 
 	on: {
-		pageInit: function(e, page) {
+		pageBeforeIn: function(e, page) {
 			var query = page.route.query;
 			var $ = this.$;
 			var app = this.$app;

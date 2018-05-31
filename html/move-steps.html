@@ -57,19 +57,19 @@ return {
 			var app = this.$app;
 			var moveId = query.m;
 			$("#move-id").html(moveId);
-			if (query.cm != undefined) {
-				// create move
+			if (query.cm != undefined) {	// create move
 				$('#move-name').val("Move-" + moveId);
 				var stepsList = "<ul><li><a href='/move-step-edit/?m=" + moveId + "&s=0'><i style='color: grey'>Create step</i></a></li></ul>";
 				$("#move-steps-list").html(stepsList);
 				$('#move-export').css('display', 'none');
 				$('#move-delete').css('display', 'none');
 				$('#move-duplicate').css('display', 'none');
-			} else {
+			} else {	// load move
 				app.request.json("m" + moveId + ".json", function success(data) {
 					$('#move-import').css('display', 'none');
 					$('#move-name').val(data.name);
-					if (parseInt(moveId) >= 10) {
+					// deal with the 4 base moves
+					if (parseInt(moveId) < 5) {
 						$('#move-name').attr('readonly','readonly');
 						$('#move-name').css('color', 'grey');
 						$('#move-delete').css('display', 'none');

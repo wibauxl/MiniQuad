@@ -95,9 +95,10 @@ return {
 				}
 				// we are good, send the steps to the MiniQuad
 				for (var s=0; s<json.steps.length; i++) {
-					var cmd = "config:move:" + moveId + ":" + s + ":";
-					for (var n=0; n<NB_SERVOS+1; n++) sendWSCommand(cmd + n + ":" + json.steps[s][n]);
-					// leave time to Miniquad to process
+					var cmd = "config:move:" + moveId + ":" + s + ":set:";
+					for (var n=0; n<NB_SERVOS+1; n++) cmd += json.steps[s][n] + " ";
+					sendWSCommand(cmd.trim());
+					// leave time to MiniQuad to process
 					sleepMs(5);
 				}
 				sendWSCommand("config:move:" + moveId + ":save:" + json.name);

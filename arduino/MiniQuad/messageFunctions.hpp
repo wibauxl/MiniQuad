@@ -10,6 +10,7 @@
  *  config:move:M:S:save                save step S of move M
  *  config:move:M:S:duplicate           duplicate step S of move M
  *  config:move:M:S:delete              delete step S of move M
+ *  config:move:M:S:set:V1 V2 .. Vn     set values of step S of move N
  *  config:move:M:S:N:V                 set servo N of step S of move M to value V
  *
  *  action:test:center                  bring all servos to center
@@ -109,6 +110,7 @@ void setServoCalibration(String *params) {
  *  config:move:M:delete                delete move M
  *  config:move:M:S:duplicate           duplicate step S of move M
  *  config:move:M:S:delete              delete step S of move M
+ *  config:move:M:S:set:V1 V2 .. Vn     set values of step S of move N
  *  config:move:M:S:N:V                 set servo N of step S of move M to value V
  */
 void setMoveConfiguration(String *params) {
@@ -119,6 +121,7 @@ void setMoveConfiguration(String *params) {
       strcpy(miniQuadMovesConfig[moveId].name, name);
       miniQuadMovesConfig[moveId].changed = true;
     }
+    if (miniQuadMovesConfig[moveId].stepChanged) miniQuadMovesConfig[moveId].changed = true;
   } else if (params[3].equals("duplicate")) {
     if (miniQuadMovesConfig[moveId].stepChanged) {
       miniQuadMovesConfig[moveId].changed = true;
@@ -159,6 +162,16 @@ void setMoveConfiguration(String *params) {
         memcpy(miniQuadMovesConfig[moveId].steps[step], miniQuadMovesConfig[moveId].steps[step-1], NB_SERVOS+1);
       miniQuadMovesConfig[moveId].nbSteps ++;
       miniQuadMovesConfig[moveId].changed = true;
+    } else if (params[4].equals("set")) {
+        String values[NB_SERVOS+1];
+        splitString(params[5], " ", values);
+        for (int servoNb=0; servoNb<NB_SERVOS+1; servoNb++) {
+          int value = values[servoNb].toInt();
+          if (miniQuadMovesConfig[moveId].steps[stepId][servoNb] != value) {
+            miniQuadMovesConfig[moveId].steps[stepId][servoNb] = value;
+            miniQuadMovesConfig[moveId].stepChanged = true;
+          }
+        }
     } else {
       int servoNb = params[4].toInt();
       int value = params[5].toInt();

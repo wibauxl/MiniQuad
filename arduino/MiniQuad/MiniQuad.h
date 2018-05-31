@@ -78,8 +78,8 @@ MiniQuadMoveConfig miniQuadMovesConfig[NB_MOVES];
 int32_t timeStamp;
 
 #define BATTERY_REFRESH 10                /* seconds between 2 battery value measurements */
-#define BATTERY_MIN (32*1024*100/10/570)  /* 3.2V : 100/570 divider : scale of 0 to 1024 */
-#define BATTERY_MAX (43*1024*100/10/570)  /* 4.3V : 100/570 divider : scale of 0 to 1024 */
+#define BATTERY_MIN (32*1024*100/10/470)  /* 3.2V : 100/470 divider : scale of 0 to 1024 */
+#define BATTERY_MAX (43*1024*100/10/470)  /* 4.3V : 100/470 divider : scale of 0 to 1024 */
 uint8_t battery = 100;
 
 #endif

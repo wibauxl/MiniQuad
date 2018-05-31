@@ -1,2 +1,2 @@
 @echo off
-java MiniquadHTTPD
+java MiniQuadHTTPD
